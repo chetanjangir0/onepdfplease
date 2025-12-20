@@ -5,9 +5,15 @@ package main
 
 import (
 	"fmt"
+	"log"
+
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/chetanjangir0/onepdfplease/internal"
 )
 
 func main() {
-	fmt.Println("hello world")
+	program := tea.NewProgram(internal.InitialModel(), tea.WithAltScreen())
+	if _, err := program.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
