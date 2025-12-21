@@ -1,33 +1,91 @@
 package internal
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"fmt"
+	"io"
+	"strings"
 
-type MenuState int
-
-const (
-	Tools MenuState = iota
-	Picker
-	Merge
-	Split
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
+var (
+	titleStyle        = lipgloss.NewStyle().MarginLeft(2)
+	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
+	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
+	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
+	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
+	quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
+)
+
+type item string
+
+func (i item) FilterValue() string { return "" }
+
+type itemDelegate struct{}
+
+func (d itemDelegate) Height() int                             { return 1 }
+func (d itemDelegate) Spacing() int                            { return 0 }
+func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
+func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
+	i, ok := listItem.(item)
+	if !ok {
+		return
+	}
+
+	str := fmt.Sprintf("%d. %s", index+1, i)
+
+	fn := itemStyle.Render
+	if index == m.Index() {
+		fn = func(s ...string) string {
+			return selectedItemStyle.Render("> " + strings.Join(s, " "))
+		}
+	}
+
+	fmt.Fprint(w, fn(str))
+}
+
+// type MenuState int
+//
+// const (
+// 	Tools MenuState = iota
+// 	Picker
+// 	Merge
+// 	Split
+// )
+
 type model struct {
-	cursor        int
-	CurrentMenu   MenuState
-	ToolsMenu     []string
-	SelectedTool  string
-	SelectedFiles []string
-	status        string
-	width         int
-	height        int
+	// cursor        int
+	// SelectedTool  string
+	// SelectedFiles []string
+	// status        string
+	// width         int
+	// height        int
+	tools    list.Model
+	choice   string
+	quitting bool
 }
 
 func InitialModel() model {
+	items := []list.Item{
+		item("Merge PDFs"),
+		item("Split PDF"),
+		item("Encrypt PDF"),
+	}
 
+	const defaultWidth = 20
+	const listHeight = 14
+
+	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
+	l.Title = "What tool do you want to use?"
+	l.SetShowStatusBar(false)
+	l.SetFilteringEnabled(false)
+	l.Styles.Title = titleStyle
+	l.Styles.PaginationStyle = paginationStyle
+	l.Styles.HelpStyle = helpStyle
 	return model{
-		cursor:      0,
-		CurrentMenu: Tools,
-		ToolsMenu:   []string{"Merge PDFs", "Split PDF"},
+		tools: l, 
 	}
 }
 
@@ -36,65 +94,36 @@ func (m model) Init() tea.Cmd {
 }
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
+	case tea.WindowSizeMsg:
+		m.tools.SetWidth(msg.Width)
+		return m, nil
 
-		case "ctrl+c", "q":
+	case tea.KeyMsg:
+		switch keypress := msg.String(); keypress {
+		case "q", "ctrl+c":
+			m.quitting = true
 			return m, tea.Quit
 
-		case "j", "down":
-			if m.cursor < m.itemCount()-1 {
-				m.cursor++
-			}
-
-		case "k", "up":
-			if m.cursor > 0 {
-				m.cursor--
-			}
-
 		case "enter":
-			switch m.CurrentMenu {
-			case Tools:
-
-				switch m.ToolsMenu[m.cursor] {
-				case "Merge PDFs":
-					m.CurrentMenu = Merge
-					m.cursor = 0
-					return m, nil
-				case "Split PDF":
-					m.CurrentMenu = Split
-					m.cursor = 0
-					return m, nil
-				}
-				m.cursor = 0 // reset cursor pos
-
-			case Merge:
-				m.status = "Merge pdfs"
-				return m, nil
-			case Split:
-				m.status = "Split pdf"
-				return m, nil
-
+			i, ok := m.tools.SelectedItem().(item)
+			if ok {
+				m.choice = string(i)
 			}
-		case "b", "esc":
-			m.CurrentMenu = Tools
-			m.cursor = 0
-			m.status = ""
-			return m, nil
+			return m, tea.Quit
 		}
 	}
-	return m, nil
+
+	var cmd tea.Cmd
+	m.tools, cmd = m.tools.Update(msg)
+	return m, cmd
 }
 
 func (m model) View() string {
-	return m.status
-}
-
-func (m model) itemCount() int {
-	switch m.CurrentMenu {
-	case Tools:
-		return len(m.ToolsMenu)
-	default:
-		return 0
+	if m.choice != "" {
+		return quitTextStyle.Render(fmt.Sprintf("%s? Initiating", m.choice))
 	}
+	if m.quitting {
+		return quitTextStyle.Render("That’s cool.")
+	}
+	return "\n" + m.tools.View()
 }

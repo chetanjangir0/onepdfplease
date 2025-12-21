@@ -4,7 +4,8 @@ package main
 // add progress bar
 
 import (
-	"log"
+	"fmt"
+	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/chetanjangir0/onepdfplease/internal"
@@ -13,6 +14,7 @@ import (
 func main() {
 	program := tea.NewProgram(internal.InitialModel(), tea.WithAltScreen())
 	if _, err := program.Run(); err != nil {
-		log.Fatal(err)
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
 	}
 }
