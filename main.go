@@ -4,7 +4,6 @@ package main
 // add progress bar
 
 import (
-	"fmt"
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"

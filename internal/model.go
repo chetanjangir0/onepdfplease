@@ -77,16 +77,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			}
 		case "b", "esc":
-			m.CurrentMenu = Tools 
+			m.CurrentMenu = Tools
 			m.cursor = 0
 			m.status = ""
 			return m, nil
 		}
-	return m, nil 
+	}
+	return m, nil
 }
 
-func (m model) View() string { 
-	return m.status 
+func (m model) View() string {
+	return m.status
 }
 
 func (m model) itemCount() int {
