@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/chetanjangir0/onepdfplease/internal/utils"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
 var (
@@ -105,7 +105,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			i, ok := m.tools.SelectedItem().(item)
 			if ok {
 				// m.choice = string(i)
-				Log(string(i))
+				utils.Log(string(i))
 			}
 
 			return m, nil 
