@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/utils"
 )
 
 var (
@@ -101,10 +102,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		switch keypress := msg.String(); keypress {
 		case "enter":
 			//TODO: change pages here
-			// i, ok := m.tools.SelectedItem().(item)
-			// if ok {
-			// 	m.choice = string(i)
-			// }
+			i, ok := m.tools.SelectedItem().(item)
+			if ok {
+				// m.choice = string(i)
+				Log(string(i))
+			}
+
 			return m, nil 
 		}
 	}
