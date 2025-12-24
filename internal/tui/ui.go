@@ -21,6 +21,7 @@ func InitialModel() model {
 	return model{
 		currentPage: types.MenuPage,
 		menuModel:   menu.NewModel(),
+		mergeModel: merge.NewModel(),
 	}
 }
 

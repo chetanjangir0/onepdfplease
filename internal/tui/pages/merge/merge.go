@@ -63,7 +63,7 @@ func NewModel() Model {
 	const listHeight = 14
 
 	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
-	l.Title = "What tool do you want to use?"
+	l.Title = "PDF merger"
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
 	l.Styles.Title = titleStyle
