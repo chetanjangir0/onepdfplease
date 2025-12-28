@@ -2,6 +2,7 @@ package main
 
 // todo
 // add progress bar
+// add stack like structure for easier file navigation
 
 import (
 	"fmt"

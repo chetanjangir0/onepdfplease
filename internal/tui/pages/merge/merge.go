@@ -100,6 +100,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		switch {
 		case key.Matches(msg, m.keys.add):
 			m.pickingFile = true
+			return m, m.filePicker.Init()
 		case key.Matches(msg, m.keys.remove):
 			log.Println("removing file")
 		case key.Matches(msg, m.keys.merge):

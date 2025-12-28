@@ -21,6 +21,7 @@ func NewModel() Model {
 	fp := filepicker.New()
 	fp.AllowedTypes = []string{".pdf"}
 	fp.CurrentDirectory, _ = os.UserHomeDir()
+	fp.SetHeight(20)
 
 	return Model{
 		filepicker: fp,
