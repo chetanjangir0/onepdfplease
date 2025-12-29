@@ -1,12 +1,12 @@
 package filepicker
 
 // TODO
-// add the selected files to the caller model
 // make two columns for selected files and file View
-// quit the filepicker and go back to the caller page
 // add keymaps and show keymaps in help menu
-// add keymap for user indicating all the files have been chosen and quit
 // space to toggle file selection and enter to end filepicker
+// add file deletions maybe give the user an undo button
+// add keys component from bubbles
+// add swap mechanism
 
 import (
 	"errors"
@@ -30,7 +30,10 @@ func NewModel() Model {
 	fp.AllowedTypes = []string{".pdf"}
 	fp.CurrentDirectory, _ = os.UserHomeDir()
 	fp.SetHeight(20)
-
+	// fp.KeyMap.Select = key.NewBinding(
+	// 	key.WithKeys(" "),
+	// 	key.WithHelp("space", "select"),
+	// )
 	return Model{
 		filepicker: fp,
 	}
@@ -55,9 +58,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		case "ctrl+c", "q":
 			return m, tea.Quit
 		case "ctrl+y":
-			return m, func() tea.Msg{
-				return types.QuitFilePickerMsg{Paths: m.SelectedFiles } // TODO: use reference here
-			}		
+			return m, func() tea.Msg {
+				return types.QuitFilePickerMsg{Paths: m.SelectedFiles} // TODO: use reference here
+			}
 		}
 	case clearErrorMsg:
 		m.err = nil

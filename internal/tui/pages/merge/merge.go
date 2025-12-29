@@ -106,6 +106,14 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			log.Println("merging PDFs")
 		case key.Matches(msg, m.keys.save):
 			log.Println("saving PDFs")
+		case key.Matches(msg, m.keys.shiftDown):
+			curIdx := m.files.GlobalIndex()
+			m.swapItems(curIdx, curIdx + 1)
+			m.files.CursorDown()
+		case key.Matches(msg, m.keys.shiftUp):
+			curIdx := m.files.GlobalIndex()
+			m.swapItems(curIdx, curIdx - 1)
+			m.files.CursorUp()
 		}
 	case types.QuitFilePickerMsg:
 		for _, path := range msg.Paths {
@@ -142,4 +150,14 @@ func (m Model) View() string {
 		filesView,
 		helpView,
 	)
+}
+
+func (m *Model) swapItems(idx1, idx2 int) {
+	if min(idx1, idx2) < 0 || max(idx1, idx2) >= len(m.files.Items()) {
+		return
+	}
+	item1 := m.files.Items()[idx1]
+	item2 := m.files.Items()[idx2]
+	m.files.SetItem(idx1, item2)
+	m.files.SetItem(idx2, item1)
 }

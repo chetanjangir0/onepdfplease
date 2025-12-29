@@ -1,14 +1,18 @@
 package merge
+// TODO:
+// remove the prefix in file view
 
 import (
 	"github.com/charmbracelet/bubbles/key"
 )
 
 type keyMap struct {
-	add    key.Binding
-	remove key.Binding
-	merge  key.Binding
-	save   key.Binding
+	add       key.Binding
+	remove    key.Binding
+	merge     key.Binding
+	save      key.Binding
+	shiftUp   key.Binding
+	shiftDown key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
@@ -18,7 +22,7 @@ func (k keyMap) ShortHelp() []key.Binding {
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.add, k.remove, k.merge, k.save}, // first column
-		// {k.Help, k.Quit},                // second column
+		{k.shiftUp, k.shiftDown},           // second column
 	}
 }
 
@@ -38,5 +42,13 @@ var keys = keyMap{
 	save: key.NewBinding(
 		key.WithKeys("s"),
 		key.WithHelp("s", "Save PDF"),
+	),
+	shiftDown: key.NewBinding(
+		key.WithKeys("J", "ctrl+down"),
+		key.WithHelp("J/ctrl+down", "Shift Down"),
+	),
+	shiftUp: key.NewBinding(
+		key.WithKeys("K", "ctrl+up"),
+		key.WithHelp("K/ctrl+up", "Shift Up"),
 	),
 }
