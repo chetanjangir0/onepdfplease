@@ -1,11 +1,13 @@
 package merge
+
 // TODO:
-// remove the prefix in file view
 // fix no items style
+// fix more help not working
 import (
 	"fmt"
 	"io"
 	"log"
+	"path/filepath"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
@@ -44,7 +46,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		return
 	}
 
-	str := fmt.Sprintf("[%d] %s", index+1, f.path)
+	str := fmt.Sprintf("[%d] %s", index+1, filepath.Base(f.path))
 
 	fn := itemStyle.Render
 	if index == m.Index() {
