@@ -11,16 +11,17 @@ type keyMap struct {
 	save      key.Binding
 	shiftUp   key.Binding
 	shiftDown key.Binding
+	help      key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.add, k.remove, k.merge, k.save}
+	return []key.Binding{k.add, k.remove, k.merge, k.save, k.help}
 }
 
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.add, k.remove, k.merge, k.save}, // first column
-		{k.shiftUp, k.shiftDown},           // second column
+		{k.shiftUp, k.shiftDown, k.help},           // second column
 	}
 }
 
@@ -48,5 +49,9 @@ var keys = keyMap{
 	shiftUp: key.NewBinding(
 		key.WithKeys("K", "ctrl+up"),
 		key.WithHelp("K/ctrl+up", "Shift Up"),
+	),
+	help: key.NewBinding(
+		key.WithKeys("?"),
+		key.WithHelp("?", "toggle help"),
 	),
 }

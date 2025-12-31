@@ -1,8 +1,9 @@
 package merge
 
 // TODO:
-// fix no items style
+// fix "no items" style
 // fix more help not working
+// incorporate the list keymaps into the custom keymaps
 import (
 	"fmt"
 	"io"
@@ -106,11 +107,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, m.filePicker.Init()
 		case key.Matches(msg, m.keys.remove):
 			m.files.RemoveItem(m.files.GlobalIndex())
-			return m, nil
 		case key.Matches(msg, m.keys.merge):
 			log.Println("merging PDFs")
 		case key.Matches(msg, m.keys.save):
 			log.Println("saving PDFs")
+		case key.Matches(msg, m.keys.help):
+			m.help.ShowAll = !m.help.ShowAll
 		case key.Matches(msg, m.keys.shiftDown):
 			curIdx := m.files.GlobalIndex()
 			m.swapItems(curIdx, curIdx + 1)
