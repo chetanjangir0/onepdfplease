@@ -1,7 +1,6 @@
 package filepicker
 
 // TODO
-// make two columns for selected files and file View
 // add keymaps and show keymaps in help menu
 // space to toggle file selection and enter to end filepicker
 // add file deletions maybe give the user an undo button
@@ -88,26 +87,27 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	var pickerView, status strings.Builder
+	var pickerView, statusView strings.Builder
+	
 	pickerView.WriteString("\n  ")
-	status.WriteString("\n  ")
 	pickerView.WriteString("Pick files:")
-	status.WriteString("Selected files: \n")
+	pickerView.WriteString("\n\n" + m.filepicker.View() + "\n")
 
 	if m.err != nil {
 		pickerView.WriteString(m.filepicker.Styles.DisabledFile.Render(m.err.Error()))
 	}
 
-	status.WriteString("\n")
+	statusView.WriteString("\n  ")
+	statusView.WriteString("Selected files: \n")
+	statusView.WriteString("\n")
 	for _, f := range m.SelectedFiles {
-		status.WriteString(m.filepicker.Styles.Selected.Render(f) + "\n")
+		statusView.WriteString(m.filepicker.Styles.Selected.Padding(0, 0, 0, 2).Render(f) + "\n")
 	}
-	status.WriteString("\n")
+	statusView.WriteString("\n")
 
-	pickerView.WriteString("\n\n" + m.filepicker.View() + "\n")
 	return lipgloss.JoinHorizontal(
 		lipgloss.Top,
 		pickerView.String(),
-		status.String(),
+		statusView.String(),
 	)
 }
