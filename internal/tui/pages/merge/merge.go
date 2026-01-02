@@ -3,6 +3,7 @@ package merge
 // TODO:
 // fix "no items" style
 // user borders 
+// add output file defaults and user able to edit it eg: output file: /home/user/Downloads/merge.pdf
 import (
 	"fmt"
 	"log"
