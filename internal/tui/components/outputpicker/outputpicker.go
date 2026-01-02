@@ -2,7 +2,6 @@ package outputpicker
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
@@ -39,7 +38,7 @@ func NewModel() Model {
 		t = textinput.New()
 		t.Cursor.Style = cursorStyle
 		t.CharLimit = 32
-
+		t.Width = 20
 		switch i {
 		case 0:
 			t.Placeholder = "Nickname"
@@ -65,7 +64,7 @@ func (m Model) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {

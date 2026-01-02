@@ -2,7 +2,7 @@ package merge
 
 // TODO:
 // fix "no items" style
-// user borders 
+// user borders
 // add output file defaults and user able to edit it eg: output file: /home/user/Downloads/merge.pdf
 import (
 	"fmt"
@@ -15,6 +15,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/filepicker"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/components/outputpicker"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
 )
 
@@ -40,6 +41,7 @@ type Model struct {
 	help        help.Model
 	filePicker  filepicker.Model
 	pickingFile bool
+	outputPicker outputpicker.Model
 }
 
 func NewModel() Model {
@@ -62,10 +64,12 @@ func NewModel() Model {
 		keys:       keys,
 		help:       help.New(),
 		filePicker: filepicker.NewModel(),
+		outputPicker: outputpicker.NewModel(),
 	}
 }
 
 func (m Model) Init() tea.Cmd {
+	// m.outputPicker.Init()
 	return nil
 }
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
@@ -126,6 +130,7 @@ func (m Model) View() string {
 
 	filesView := m.files.View()
 	helpView := helpStyle.Render(m.help.View(m.keys))
+	outputPickerView := m.outputPicker.View()
 
 	if m.pickingFile {
 		return m.filePicker.View()
@@ -134,6 +139,7 @@ func (m Model) View() string {
 	return "\n" + lipgloss.JoinVertical(
 		lipgloss.Left,
 		filesView,
+		outputPickerView,
 		helpView,
 	)
 }
