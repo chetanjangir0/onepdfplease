@@ -4,6 +4,7 @@ package merge
 // fix "no items" style
 // user borders
 // add output file defaults and user able to edit it eg: output file: /home/user/Downloads/merge.pdf
+// change focus using tab
 import (
 	"fmt"
 	"log"
@@ -35,12 +36,12 @@ type file struct {
 func (i file) FilterValue() string { return "" }
 
 type Model struct {
-	files       list.Model
-	choice      string
-	keys        keyMap
-	help        help.Model
-	filePicker  filepicker.Model
-	pickingFile bool
+	files        list.Model
+	choice       string
+	keys         keyMap
+	help         help.Model
+	filePicker   filepicker.Model
+	pickingFile  bool
 	outputPicker outputpicker.Model
 }
 
@@ -59,17 +60,26 @@ func NewModel() Model {
 	l.SetShowHelp(false) // instead using custom help menu
 	l.Styles.NoItems = l.Styles.NoItems.PaddingLeft(l.Styles.TitleBar.GetPaddingLeft())
 
+	fp := filepicker.NewModel()
+
+	outputFields := []outputpicker.Field{
+		{
+			Placeholder: "./merged.pdf",
+			Prefix:      "Output File",
+		},
+	}
+	op := outputpicker.NewModel(outputFields)
 	return Model{
-		files:      l,
-		keys:       keys,
-		help:       help.New(),
-		filePicker: filepicker.NewModel(),
-		outputPicker: outputpicker.NewModel(),
+		files:        l,
+		keys:         keys,
+		help:         help.New(),
+		filePicker:   fp,
+		outputPicker: op,
 	}
 }
 
 func (m Model) Init() tea.Cmd {
-	// m.outputPicker.Init()
+	m.outputPicker.Init()
 	return nil
 }
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
@@ -104,6 +114,8 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			m.swapItems(curIdx, curIdx-1)
 			m.files.CursorUp()
 			return m, nil
+		case key.Matches(msg, m.keys.tab):
+			m.outputPicker.Focused = !m.outputPicker.Focused
 		}
 	case types.QuitFilePickerMsg:
 		for _, path := range msg.Paths {
@@ -116,6 +128,11 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 	if m.pickingFile {
 		m.filePicker, cmd = m.filePicker.Update(msg)
+		return m, cmd
+	}
+
+	if m.outputPicker.Focused {
+		m.outputPicker, cmd = m.outputPicker.Update(msg)
 		return m, cmd
 	}
 

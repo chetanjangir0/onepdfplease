@@ -26,32 +26,28 @@ type Model struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
+	Focused    bool
 }
 
-func NewModel() Model {
+type Field struct {
+	Placeholder string
+	Prefix      string
+}
+
+func NewModel(fields []Field) Model {
 	m := Model{
-		Inputs: make([]textinput.Model, 3),
+		Inputs: make([]textinput.Model, len(fields)),
 	}
 
 	var t textinput.Model
 	for i := range m.Inputs {
 		t = textinput.New()
 		t.Cursor.Style = cursorStyle
-		t.CharLimit = 32
+		t.CharLimit = 64 
 		t.Width = 20
-		switch i {
-		case 0:
-			t.Placeholder = "Nickname"
+		t.Placeholder = fields[i].Placeholder
+		if i == 0 {
 			t.Focus()
-			t.PromptStyle = focusedStyle
-			t.TextStyle = focusedStyle
-		case 1:
-			t.Placeholder = "Email"
-			t.CharLimit = 64
-		case 2:
-			t.Placeholder = "Password"
-			t.EchoMode = textinput.EchoPassword
-			t.EchoCharacter = '•'
 		}
 
 		m.Inputs[i] = t
@@ -84,7 +80,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, tea.Batch(cmds...)
 
 		// Set focus to next input
-		case "tab", "shift+tab", "enter", "up", "down":
+		case "shift+tab", "enter", "up", "down":
 			s := msg.String()
 
 			// Did the user press enter while the submit button was focused?

@@ -12,6 +12,7 @@ type keyMap struct {
 	shiftUp   key.Binding
 	shiftDown key.Binding
 	help      key.Binding
+	tab       key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
@@ -21,7 +22,7 @@ func (k keyMap) ShortHelp() []key.Binding {
 func (k keyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.add, k.remove, k.merge, k.save}, // first column
-		{k.shiftUp, k.shiftDown, k.help},           // second column
+		{k.shiftUp, k.shiftDown, k.help},   // second column
 	}
 }
 
@@ -53,5 +54,9 @@ var keys = keyMap{
 	help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
+	),
+	tab: key.NewBinding(
+		key.WithKeys("tab"),
+		key.WithHelp("Tab", "Switch focus"),
 	),
 }
