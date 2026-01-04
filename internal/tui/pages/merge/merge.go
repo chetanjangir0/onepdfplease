@@ -9,6 +9,16 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/outputpicker"
 )
 
+var (
+	focusedStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("205")) // Bright pink/magenta
+
+	blurredStyle = lipgloss.NewStyle().
+			Border(lipgloss.RoundedBorder()).
+			BorderForeground(lipgloss.Color("240")) // Dim gray
+)
+
 type Model struct {
 	focusIndex   int // 0 for fileList 1 for outputPicker
 	fileList     listfiles.Model
@@ -60,9 +70,14 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	outputPickerView := m.outputPicker.View()
-	fileListView := m.fileList.View()
-
+	var fileListView, outputPickerView string
+	if m.focusIndex == 0 {
+		fileListView = focusedStyle.Render(m.fileList.View())
+		outputPickerView = blurredStyle.Render(m.outputPicker.View())
+	} else {
+		fileListView = blurredStyle.Render(m.fileList.View())
+		outputPickerView = focusedStyle.Render(m.outputPicker.View())
+	}
 	return "\n" + lipgloss.JoinVertical(
 		lipgloss.Left,
 		fileListView,
