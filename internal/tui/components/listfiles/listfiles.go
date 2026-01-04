@@ -4,6 +4,7 @@ package listfiles
 // fix "no items" style
 // user borders
 // add output file defaults and user able to edit it eg: output file: /home/user/Downloads/merge.pdf
+// seperate help view from this to render it outside in any place 
 import (
 	"log"
 

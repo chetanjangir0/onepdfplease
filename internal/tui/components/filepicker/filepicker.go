@@ -6,6 +6,9 @@ package filepicker
 // add file deletions maybe give the user an undo button
 // add keys component from bubbles
 // add swap mechanism
+// add pagination in selected items too
+// account for long names of the files
+// 
 
 import (
 	"errors"
