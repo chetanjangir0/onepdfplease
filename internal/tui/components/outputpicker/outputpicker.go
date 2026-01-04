@@ -26,16 +26,11 @@ type Model struct {
 	FocusIndex int
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
-	Focused    bool
 }
 
 type Field struct {
 	Placeholder string
 	Prompt      string
-}
-
-func (m *Model) ToggleFocus() {
-	m.Focused = !m.Focused
 }
 
 func NewModel(fields []Field) Model {

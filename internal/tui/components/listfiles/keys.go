@@ -1,4 +1,4 @@
-package merge
+package listfiles 
 
 import (
 	"github.com/charmbracelet/bubbles/key"
@@ -12,7 +12,6 @@ type keyMap struct {
 	shiftUp   key.Binding
 	shiftDown key.Binding
 	help      key.Binding
-	tab       key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
@@ -54,9 +53,5 @@ var keys = keyMap{
 	help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
-	),
-	tab: key.NewBinding(
-		key.WithKeys("tab"),
-		key.WithHelp("Tab", "Switch focus"),
 	),
 }
