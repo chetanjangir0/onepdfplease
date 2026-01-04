@@ -2,21 +2,13 @@ package merge
 
 // TODO:
 // change focus using tab
+// fix border changing after selected files become active
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/outputpicker"
-)
-
-var (
-	focusedStyle = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("205")) // Bright pink/magenta
-
-	blurredStyle = lipgloss.NewStyle().
-			Border(lipgloss.RoundedBorder()).
-			BorderForeground(lipgloss.Color("240")) // Dim gray
+	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 )
 
 type Model struct {
@@ -72,11 +64,11 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 func (m Model) View() string {
 	var fileListView, outputPickerView string
 	if m.focusIndex == 0 {
-		fileListView = focusedStyle.Render(m.fileList.View())
-		outputPickerView = blurredStyle.Render(m.outputPicker.View())
+		fileListView = style.DefaultStyle.FocusedBorder.Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.BlurredBorder.Render(m.outputPicker.View())
 	} else {
-		fileListView = blurredStyle.Render(m.fileList.View())
-		outputPickerView = focusedStyle.Render(m.outputPicker.View())
+		fileListView = style.DefaultStyle.BlurredBorder.Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.FocusedBorder.Render(m.outputPicker.View())
 	}
 	return "\n" + lipgloss.JoinVertical(
 		lipgloss.Left,
