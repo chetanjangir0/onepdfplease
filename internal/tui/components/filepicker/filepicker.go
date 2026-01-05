@@ -90,27 +90,34 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	var pickerView, statusView strings.Builder
-	
-	pickerView.WriteString("\n  ")
-	pickerView.WriteString("Pick files:")
-	pickerView.WriteString("\n\n" + m.filepicker.View() + "\n")
-
-	if m.err != nil {
-		pickerView.WriteString(m.filepicker.Styles.DisabledFile.Render(m.err.Error()))
-	}
-
-	statusView.WriteString("\n  ")
-	statusView.WriteString("Selected files: \n")
-	statusView.WriteString("\n")
-	for _, f := range m.SelectedFiles {
-		statusView.WriteString(m.filepicker.Styles.Selected.Padding(0, 0, 0, 2).Render(filepath.Base(f)) + "\n")
-	}
-	statusView.WriteString("\n")
 
 	return lipgloss.JoinHorizontal(
 		lipgloss.Top,
-		pickerView.String(),
-		statusView.String(),
+		m.browseView(),
+		m.selectedView(),
 	)
+}
+
+func (m Model) browseView() string {
+	var view strings.Builder
+	view.WriteString("\n  ")
+	view.WriteString("Pick files:")
+	view.WriteString("\n\n" + m.filepicker.View() + "\n")
+
+	if m.err != nil {
+		view.WriteString(m.filepicker.Styles.DisabledFile.Render(m.err.Error()))
+	}
+	return view.String()
+}
+
+func (m Model) selectedView() string {
+	var view strings.Builder 
+	view.WriteString("\n  ")
+	view.WriteString("Selected files: \n")
+	view.WriteString("\n")
+	for _, f := range m.SelectedFiles {
+		view.WriteString(m.filepicker.Styles.Selected.Padding(0, 0, 0, 2).Render(filepath.Base(f)) + "\n")
+	}
+	view.WriteString("\n")
+	return view.String()
 }
