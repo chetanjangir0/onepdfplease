@@ -2,27 +2,31 @@ package tui
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/menu"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/merge"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
+	"log"
 )
 
 type model struct {
 	quitting    bool
 	currentPage types.Page
+	ctx         *context.ProgramContext
 
 	// each page has its own model
-	menuModel menu.Model
+	menuModel  menu.Model
 	mergeModel merge.Model
 }
 
 func InitialModel() model {
-
-	return model{
+	m := model{
 		currentPage: types.MenuPage,
 		menuModel:   menu.NewModel(),
-		mergeModel: merge.NewModel(),
+		mergeModel:  merge.NewModel(),
 	}
+	m.ctx = &context.ProgramContext{}
+	return m
 }
 
 func (m model) Init() tea.Cmd {
@@ -30,6 +34,8 @@ func (m model) Init() tea.Cmd {
 }
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.onWindowSizeChanged(msg)
 	case tea.KeyMsg:
 		switch keypress := msg.String(); keypress {
 		case "q", "ctrl+c":
@@ -37,7 +43,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	case types.NavigateMsg:
-		m.currentPage = msg.Page	
+		m.currentPage = msg.Page
 		return m, nil
 	}
 
@@ -49,7 +55,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.mergeModel, cmd = m.mergeModel.Update(msg)
 	}
 
-	return m, cmd 
+	return m, cmd
 }
 
 func (m model) View() string {
@@ -61,4 +67,10 @@ func (m model) View() string {
 	}
 	return ""
 
+}
+
+func (m *model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
+	log.Println("window size changed", "width", msg.Width, "height", msg.Height)
+	m.ctx.ScreenWidth = msg.Width
+	m.ctx.ScreenHeight = msg.Height
 }

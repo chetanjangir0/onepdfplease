@@ -4,6 +4,7 @@ package merge
 // change focus using tab
 // fix border changing after selected files become active
 import (
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
@@ -75,4 +76,6 @@ func (m Model) View() string {
 		fileListView,
 		outputPickerView,
 	)
+
+	// return style.RenderColumnLayout(150, 30, fileListView, outputPickerView)
 }
