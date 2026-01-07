@@ -45,14 +45,14 @@ func RenderColumnLayout(termWidth, height int, columnViews ...string) string {
 	columnHeight := height - paddingPerColumn - borderWidthPerColumn
 
 	columns := make([]string, numColumns)
-	for i := range numColumns {
-		colContent := lipgloss.JoinVertical(lipgloss.Left,
-			lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("86")).Render(columnViews[i]))
 
+	for i := range numColumns {
 		colWidth := columnContentWidth
 		if i == numColumns-1 {
 			colWidth += remainder
 		}
+		colContent := TruncateView(columnViews[i], colWidth)
+
 		columns[i] = DefaultStyle.FocusedBorder.
 			Padding(paddingPerColumn).
 			Width(colWidth).
