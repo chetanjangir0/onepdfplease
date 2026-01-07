@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/x/ansi"
 )
 
 type Style struct {
@@ -82,4 +83,13 @@ func addSpacerInBetween(cols []string, spacer string) []string {
 		out = append(out, c)
 	}
 	return out
+}
+
+func TruncateView(view string, length int) string {
+
+	lines := strings.Split(view, "\n")
+	for i, line := range lines {
+		lines[i] = ansi.Truncate(line, length, "...")
+	}
+	return strings.Join(lines, "\n")
 }
