@@ -70,11 +70,11 @@ func (m Model) View() string {
 	}
 	var fileListView, outputPickerView string
 	if m.focusIndex == 0 {
-		fileListView = style.DefaultStyle.FocusedBorder.Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.BlurredBorder.Render(m.outputPicker.View())
+		fileListView = style.DefaultStyle.FocusedBorder.Width(m.ctx.ScreenWidth).Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.BlurredBorder.Width(m.ctx.ScreenWidth).Render(m.outputPicker.View())
 	} else {
-		fileListView = style.DefaultStyle.BlurredBorder.Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.FocusedBorder.Render(m.outputPicker.View())
+		fileListView = style.DefaultStyle.BlurredBorder.Width(m.ctx.ScreenWidth).Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.FocusedBorder.Width(m.ctx.ScreenWidth).Render(m.outputPicker.View())
 	}
 	return "\n" + lipgloss.JoinVertical(
 		lipgloss.Left,

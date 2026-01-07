@@ -100,6 +100,7 @@ func (m Model) View() string {
 	return style.RenderColumnLayout(
 		m.ctx.ScreenWidth,
 		m.ctx.ScreenHeight,
+		style.DefaultStyle.FocusedBorder,
 		m.browseView(),
 		m.selectedView(),
 	)

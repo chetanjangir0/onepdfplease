@@ -23,7 +23,7 @@ var DefaultStyle = &Style{
 		BorderForeground(lipgloss.Color("240")), // Dim gray
 }
 
-func RenderColumnLayout(termWidth, height int, columnViews ...string) string {
+func RenderColumnLayout(termWidth, height int, style lipgloss.Style, columnViews ...string) string {
 	numColumns := len(columnViews)
 	spacing := 0 // Space between columns
 
@@ -54,7 +54,7 @@ func RenderColumnLayout(termWidth, height int, columnViews ...string) string {
 		}
 		colContent := TruncateView(columnViews[i], colWidth)
 
-		columns[i] = DefaultStyle.FocusedBorder.
+		columns[i] = style.
 			Padding(paddingPerColumn).
 			Width(colWidth).
 			Height(columnHeight).
@@ -90,7 +90,7 @@ func TruncateView(view string, length int) string {
 
 	lines := strings.Split(view, "\n")
 	for i, line := range lines {
-		lines[i] = TruncateFilenameMiddle(line, length, 4) 
+		lines[i] = TruncateFilenameMiddle(line, length, 4)
 	}
 	return strings.Join(lines, "\n")
 }
