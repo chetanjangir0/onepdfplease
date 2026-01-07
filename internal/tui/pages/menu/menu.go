@@ -113,5 +113,5 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 func (m Model) View() string {
 	toolsView := style.DefaultStyle.FocusedBorder.Render(m.tools.View())
-	return "\n" + toolsView
+	return lipgloss.Place(m.ctx.ScreenWidth, m.ctx.ScreenHeight, lipgloss.Center, lipgloss.Center, toolsView)
 }
