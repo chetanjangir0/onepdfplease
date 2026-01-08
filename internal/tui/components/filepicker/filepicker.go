@@ -97,7 +97,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	return style.RenderColumnLayout(
+	return style.RenderTwoFullCols(
 		m.ctx.ScreenWidth,
 		m.ctx.ScreenHeight,
 		style.DefaultStyle.FocusedBorder,

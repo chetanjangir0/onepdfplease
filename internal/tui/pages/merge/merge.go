@@ -21,7 +21,7 @@ type Model struct {
 
 func NewModel(ctx *context.ProgramContext) Model {
 	lf := listfiles.NewModel(ctx)
-	lf.SetTitle("Merge PDFs")
+	lf.SetTitle("Choose Order")
 
 	outputFields := []outputpicker.Field{
 		{
@@ -70,11 +70,23 @@ func (m Model) View() string {
 	}
 	var fileListView, outputPickerView string
 	if m.focusIndex == 0 {
-		fileListView = style.DefaultStyle.FocusedBorder.Width(m.ctx.ScreenWidth).Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.BlurredBorder.Width(m.ctx.ScreenWidth).Render(m.outputPicker.View())
+		// fileListView = style.DefaultStyle.FocusedBorder.Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.BlurredBorder.Render(m.outputPicker.View())
+		fileListView = style.RenderColumnLayout(
+			m.ctx.ScreenWidth,
+			20,
+			style.DefaultStyle.FocusedBorder,
+			m.fileList.View(),
+		)
 	} else {
-		fileListView = style.DefaultStyle.BlurredBorder.Width(m.ctx.ScreenWidth).Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.FocusedBorder.Width(m.ctx.ScreenWidth).Render(m.outputPicker.View())
+		// fileListView = style.DefaultStyle.BlurredBorder.Render(m.fileList.View())
+		outputPickerView = style.DefaultStyle.FocusedBorder.Render(m.outputPicker.View())
+		fileListView = style.RenderColumnLayout(
+			m.ctx.ScreenWidth,
+			20,
+			style.DefaultStyle.BlurredBorder,
+			m.fileList.View(),
+		)
 	}
 	return "\n" + lipgloss.JoinVertical(
 		lipgloss.Left,

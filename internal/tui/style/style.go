@@ -23,55 +23,93 @@ var DefaultStyle = &Style{
 		BorderForeground(lipgloss.Color("240")), // Dim gray
 }
 
-func RenderColumnLayout(termWidth, height int, style lipgloss.Style, columnViews ...string) string {
-	numColumns := len(columnViews)
-	spacing := 0 // Space between columns
-
-	totalSpacing := spacing * (numColumns - 1)
-
-	borderWidthPerColumn := 2
-	totalBorderWidth := borderWidthPerColumn * numColumns
-
-	paddingPerColumn := 0
-	totalPadding := paddingPerColumn * numColumns
-
-	usableWidth := termWidth - totalBorderWidth - totalPadding - totalSpacing
-
-	// Each column gets equal percentage
-	columnContentWidth := usableWidth / numColumns
-
-	// Adjust for any remainder pixels
-	remainder := usableWidth % numColumns
-
-	columnHeight := height - paddingPerColumn - borderWidthPerColumn
-
-	columns := make([]string, numColumns)
-
-	for i := range numColumns {
-		colWidth := columnContentWidth
-		if i == numColumns-1 {
-			colWidth += remainder
-		}
-		colContent := TruncateView(columnViews[i], colWidth)
-
-		columns[i] = style.
-			Padding(paddingPerColumn).
-			Width(colWidth).
-			Height(columnHeight).
-			Render(colContent)
+func SplitHeightByPercentage(height int, percentages []float64, spacing, padding, borderHeight int) []int {
+	numRows := len(percentages)
+	if numRows == 0 {
+		return []int{}
 	}
-
-	// Join columns horizontally with spacing
-	spacer := strings.Repeat(" ", spacing)
-	row := lipgloss.JoinHorizontal(
-		lipgloss.Top,
-		addSpacerInBetween(columns, spacer)...,
-	)
-
-	return row
+	var sum float64
+	for _, p := range percentages {
+		sum += p
+	}
+	totalSpacing := spacing * (numRows - 1)
+	totalBorderHeight := borderHeight * numRows
+	totalPadding := padding * numRows
+	usableHeight := height - totalSpacing - totalPadding - totalBorderHeight
+	allocatedHeight := 0
+	heights := make([]int, numRows)
+	for i, p := range percentages {
+		normalizedPercent := p / sum
+		heights[i] = int(float64(usableHeight) * normalizedPercent)
+		allocatedHeight += heights[i]
+	}
+	// Distribute remainder to last row
+	remainder := usableHeight - allocatedHeight
+	heights[len(heights)-1] += remainder
+	return heights
 }
 
-func addSpacerInBetween(cols []string, spacer string) []string {
+func SplitWidthByPercentage(width int, percentages []float64, spacing, padding, borderWidth int) []int {
+	numCols := len(percentages)
+	if numCols == 0 {
+		return []int{}
+	}
+	var sum float64
+	for _, p := range percentages {
+		sum += p
+	}
+	totalSpacing := spacing * (numCols - 1)
+	totalBorderWidth := borderWidth * numCols
+	totalPadding := padding * numCols
+	usableWidth := width - totalSpacing - totalPadding - totalBorderWidth
+
+	allocatedWidth := 0
+	widths := make([]int, numCols)
+	for i, p := range percentages {
+		normalizedPercent := p / sum
+		widths[i] = int(float64(usableWidth) * normalizedPercent)
+		allocatedWidth += widths[i]
+	}
+
+	// Distribute remainder to last column
+	remainder := usableWidth - allocatedWidth
+	widths[len(widths)-1] += remainder
+
+	return widths
+}
+
+func RenderTwoFullCols(termWidth, termHeight int, style lipgloss.Style, col1View, col2View string) string {
+	spacing := 0
+	padding := 0
+	height := SplitHeightByPercentage(termHeight, []float64{1}, spacing, padding, 2)
+	widths := SplitWidthByPercentage(termWidth, []float64{0.5, 0.5}, spacing, padding, 2)
+
+	// truncateView
+	col1View = TruncateView(col1View, widths[0])
+	col2View = TruncateView(col2View, widths[1])
+
+
+	// apply style
+	col1View = style.
+		Padding(padding).
+		Width(widths[0]).
+		Height(height[0]).
+		Render(col1View)
+	col2View = style.
+		Padding(padding).
+		Width(widths[1]).
+		Height(height[0]).
+		Render(col2View)
+
+	// add spacing
+	spacer := strings.Repeat(" ", spacing)
+	return lipgloss.JoinHorizontal(
+		lipgloss.Top,
+		AddSpacerInBetween([]string{col1View, col2View}, spacer)...,
+	)
+}
+
+func AddSpacerInBetween(cols []string, spacer string) []string {
 	if len(cols) == 0 {
 		return nil
 	}
