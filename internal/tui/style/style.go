@@ -23,6 +23,7 @@ var DefaultStyle = &Style{
 		BorderForeground(lipgloss.Color("240")), // Dim gray
 }
 
+// TODO Remove spacing calculation since I don't want spacing between rows
 func SplitHeightByPercentage(height int, percentages []float64, spacing, padding, borderHeight int) []int {
 	numRows := len(percentages)
 	if numRows == 0 {
@@ -78,13 +79,13 @@ func SplitWidthByPercentage(width int, percentages []float64, spacing, padding, 
 	return widths
 }
 
-func AddSpacerInBetween(cols []string, spacer string) []string {
-	if len(cols) == 0 {
+func AddSpacerInBetween(views []string, spacer string) []string {
+	if len(views) == 0 {
 		return nil
 	}
 
-	out := make([]string, 0, len(cols)*2-1)
-	for i, c := range cols {
+	out := make([]string, 0, len(views)*2-1)
+	for i, c := range views {
 		if i > 0 {
 			out = append(out, spacer)
 		}

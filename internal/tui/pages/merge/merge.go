@@ -68,19 +68,34 @@ func (m Model) View() string {
 	if m.fileList.PickingFile {
 		return m.fileList.View()
 	}
-	var fileListView, outputPickerView string
+	// var fileListView, outputPickerView string
+	var fileListStyle, outputPickerStyle lipgloss.Style
 	if m.focusIndex == 0 {
-		fileListView = style.DefaultStyle.FocusedBorder.Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.BlurredBorder.Render(m.outputPicker.View())
+		// fileListView = style.DefaultStyle.FocusedBorder.Render(m.fileList.View())
+		// outputPickerView = style.DefaultStyle.BlurredBorder.Render(m.outputPicker.View())
+		fileListStyle = style.DefaultStyle.FocusedBorder
+		outputPickerStyle = style.DefaultStyle.BlurredBorder
 	} else {
-		fileListView = style.DefaultStyle.BlurredBorder.Render(m.fileList.View())
-		outputPickerView = style.DefaultStyle.FocusedBorder.Render(m.outputPicker.View())
+		// fileListView = style.DefaultStyle.BlurredBorder.Render(m.fileList.View())
+		// outputPickerView = style.DefaultStyle.FocusedBorder.Render(m.outputPicker.View())
+		fileListStyle = style.DefaultStyle.BlurredBorder
+		outputPickerStyle = style.DefaultStyle.FocusedBorder
 	}
-	return "\n" + lipgloss.JoinVertical(
-		lipgloss.Left,
-		fileListView,
-		outputPickerView,
+
+	return style.RenderTwoFullRows(
+		m.ctx.ScreenWidth,
+		m.ctx.ScreenHeight,
+		fileListStyle,
+		outputPickerStyle,
+		m.fileList.View(),
+		m.outputPicker.View(),
+
 	)
+	// return "\n" + lipgloss.JoinVertical(
+	// 	lipgloss.Left,
+	// 	fileListView,
+	// 	outputPickerView,
+	// )
 
 	// return style.RenderCol umnLayout(m.ctx.ScreenWidth, 10, fileListView, outputPickerView)
 }
