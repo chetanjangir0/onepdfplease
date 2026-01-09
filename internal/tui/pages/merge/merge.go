@@ -13,6 +13,7 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
 type Model struct {
@@ -56,8 +57,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, nil
 		}
 	case messages.OutputButtonClicked:
-		log.Println("output button clicked")
-		return m, nil
+		return m, utils.Merge(m.fileList.GetFilePaths(), "./merged.pdf")
+	case messages.PDFOperationStatus:
+		log.Println("opError", msg.Err, msg.TaskType)
 	}
 
 	var cmd tea.Cmd
