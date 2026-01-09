@@ -85,6 +85,5 @@ func (m Model) View() string {
 		outputPickerStyle,
 		m.fileList.View(),
 		m.outputPicker.View(),
-
 	)
 }
