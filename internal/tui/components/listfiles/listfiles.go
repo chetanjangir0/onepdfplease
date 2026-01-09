@@ -46,6 +46,17 @@ func (m *Model) SetTitle(title string) {
 	m.files.Title = title
 }
 
+func (m *Model) GetFilePaths() []string {
+	items := m.files.Items()
+	paths := make([]string, 0, len(items))
+	for _, item := range items {
+		if f, ok := item.(file); ok {
+			paths = append(paths, f.path)
+		}
+	}
+	return paths
+}
+
 func NewModel(ctx *context.ProgramContext) Model {
 	items := []list.Item{}
 
