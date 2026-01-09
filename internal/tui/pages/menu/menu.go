@@ -99,7 +99,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			if ok {
 				// log.Println("navigating to:" + string(i.title))
 				return m, func() tea.Msg {
-					return messages.NavigateMsg{Page: i.page}
+					return messages.Navigate{Page: i.page}
 				}
 			}
 

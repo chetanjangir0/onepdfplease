@@ -44,7 +44,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.quitting = true
 			return m, tea.Quit
 		}
-	case messages.NavigateMsg:
+	case messages.Navigate:
 		m.currentPage = msg.Page
 		return m, nil
 	}

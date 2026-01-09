@@ -8,10 +8,10 @@ type PDFOperationStatus struct {
 }
 
 
-type NavigateMsg struct {
+type Navigate struct {
 	Page types.Page
 }
 
-type QuitFilePickerMsg struct {
+type QuitFilePicker struct {
 	Paths []string
 }

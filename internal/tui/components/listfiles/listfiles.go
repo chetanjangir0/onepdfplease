@@ -108,7 +108,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			m.files.CursorUp()
 			return m, nil
 		}
-	case messages.QuitFilePickerMsg:
+	case messages.QuitFilePicker:
 		for _, path := range msg.Paths {
 			m.files.InsertItem(len(m.files.Items()), file{path: path})
 		}

@@ -69,7 +69,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, tea.Quit
 		case "ctrl+y":
 			return m, func() tea.Msg {
-				return messages.QuitFilePickerMsg{Paths: m.SelectedFiles} // TODO: use reference here
+				return messages.QuitFilePicker{Paths: m.SelectedFiles} // TODO: use reference here
 			}
 		}
 	case clearErrorMsg:
