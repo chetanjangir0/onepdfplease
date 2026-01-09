@@ -15,3 +15,5 @@ type Navigate struct {
 type QuitFilePicker struct {
 	Paths []string
 }
+
+type OutputButtonClicked struct {}

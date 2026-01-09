@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 )
 
 var (
@@ -72,7 +73,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 			// Did the user press enter while the submit button was focused?
 			if s == "enter" && m.FocusIndex == len(m.Inputs) {
-				return m, tea.Quit
+				return m, func() tea.Msg {
+					return messages.OutputButtonClicked{}
+				} 
 			}
 
 			// Cycle indexes

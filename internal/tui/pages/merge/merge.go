@@ -4,11 +4,14 @@ package merge
 // change focus using tab
 // fix border changing after selected files become active
 import (
+	"log"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/outputpicker"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 )
 
@@ -52,6 +55,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			m.focusIndex = (m.focusIndex - 1 + 2) % 2
 			return m, nil
 		}
+	case messages.OutputButtonClicked:
+		log.Println("output button clicked")
+		return m, nil
 	}
 
 	var cmd tea.Cmd
