@@ -26,7 +26,7 @@ func (m Model) View() string {
 	footer := "This is the footer"
 
 	if m.ShowAll {
-		fullHelp := m.help.View(keys.Keys)
+		fullHelp := m.help.View(keys.ListFilesKeys)
 		return lipgloss.JoinVertical(lipgloss.Top, footer, fullHelp)
 	}
 	return footer

@@ -4,53 +4,53 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 )
 
-type keyMap struct {
-	add       key.Binding
-	remove    key.Binding
-	merge     key.Binding
-	save      key.Binding
-	shiftUp   key.Binding
-	shiftDown key.Binding
-	help      key.Binding
+type ListFileKeymap struct {
+	Add       key.Binding
+	Remove    key.Binding
+	Merge     key.Binding
+	Save      key.Binding
+	ShiftUp   key.Binding
+	ShiftDown key.Binding
+	Help      key.Binding
 }
 
-func (k keyMap) ShortHelp() []key.Binding {
-	return []key.Binding{k.add, k.remove, k.merge, k.save, k.help}
+func (k ListFileKeymap) ShortHelp() []key.Binding {
+	return []key.Binding{k.Add, k.Remove, k.Merge, k.Save, k.Help}
 }
 
-func (k keyMap) FullHelp() [][]key.Binding {
+func (k ListFileKeymap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{k.add, k.remove, k.merge, k.save}, // first column
-		{k.shiftUp, k.shiftDown, k.help},   // second column
+		{k.Add, k.Remove, k.Merge, k.Save}, // first column
+		{k.ShiftUp, k.ShiftDown, k.Help},   // second column
 	}
 }
 
-var Keys = keyMap{
-	add: key.NewBinding(
+var ListFilesKeys = ListFileKeymap{
+	Add: key.NewBinding(
 		key.WithKeys("a"),
 		key.WithHelp("a", "Add files"),
 	),
-	remove: key.NewBinding(
+	Remove: key.NewBinding(
 		key.WithKeys("d"),
 		key.WithHelp("d", "Remove files"),
 	),
-	merge: key.NewBinding(
+	Merge: key.NewBinding(
 		key.WithKeys("m"),
 		key.WithHelp("m", "Merge PDFs"),
 	),
-	save: key.NewBinding(
+	Save: key.NewBinding(
 		key.WithKeys("s"),
 		key.WithHelp("s", "Save PDF"),
 	),
-	shiftDown: key.NewBinding(
+	ShiftDown: key.NewBinding(
 		key.WithKeys("J", "ctrl+down"),
 		key.WithHelp("J/ctrl+down", "Shift Down"),
 	),
-	shiftUp: key.NewBinding(
+	ShiftUp: key.NewBinding(
 		key.WithKeys("K", "ctrl+up"),
 		key.WithHelp("K/ctrl+up", "Shift Up"),
 	),
-	help: key.NewBinding(
+	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
 	),

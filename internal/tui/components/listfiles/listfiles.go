@@ -16,6 +16,7 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/filepicker"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/keys"
 )
 
 var (
@@ -34,7 +35,7 @@ func (i file) FilterValue() string { return "" }
 
 type Model struct {
 	files       list.Model
-	keys        keyMap
+	keys        keys.ListFileKeymap
 	help        help.Model
 	filePicker  filepicker.Model
 	PickingFile bool
@@ -76,7 +77,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 
 	return Model{
 		files:      l,
-		keys:       keys,
+		keys:       keys.ListFilesKeys,
 		help:       help.New(),
 		filePicker: fp,
 		ctx:        ctx,
@@ -94,26 +95,26 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		switch {
-		case key.Matches(msg, m.keys.add):
+		case key.Matches(msg, m.keys.Add):
 			m.PickingFile = true
 			m.filePicker = filepicker.NewModel(m.ctx)
 			return m, m.filePicker.Init()
-		case key.Matches(msg, m.keys.remove):
+		case key.Matches(msg, m.keys.Remove):
 			m.files.RemoveItem(m.files.GlobalIndex())
 			m.files.CursorUp()
 			return m, nil
-		case key.Matches(msg, m.keys.merge):
+		case key.Matches(msg, m.keys.Merge):
 			log.Println("merging PDFs")
-		case key.Matches(msg, m.keys.save):
+		case key.Matches(msg, m.keys.Save):
 			log.Println("saving PDFs")
-		case key.Matches(msg, m.keys.help):
+		case key.Matches(msg, m.keys.Help):
 			m.help.ShowAll = !m.help.ShowAll
-		case key.Matches(msg, m.keys.shiftDown):
+		case key.Matches(msg, m.keys.ShiftDown):
 			curIdx := m.files.GlobalIndex()
 			m.swapItems(curIdx, curIdx+1)
 			m.files.CursorDown()
 			return m, nil
-		case key.Matches(msg, m.keys.shiftUp):
+		case key.Matches(msg, m.keys.ShiftUp):
 			curIdx := m.files.GlobalIndex()
 			m.swapItems(curIdx, curIdx-1)
 			m.files.CursorUp()
