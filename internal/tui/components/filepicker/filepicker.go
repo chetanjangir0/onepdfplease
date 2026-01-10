@@ -98,8 +98,8 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 
 func (m Model) View() string {
 	return style.RenderTwoFullCols(
-		m.ctx.ScreenWidth,
-		m.ctx.ScreenHeight,
+		m.ctx.TermWidth,
+		m.ctx.MainContentHeight,
 		style.DefaultStyle.FocusedBorder,
 		m.browseView(),
 		m.selectedView(),

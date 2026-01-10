@@ -13,22 +13,21 @@ type Model struct {
 	ShowAll bool
 }
 
-
 func NewModel(ctx *context.ProgramContext) Model {
 	help := help.New()
 	help.ShowAll = true
-	m := Model {
+	m := Model{
 		help: help,
 	}
 	return m
-} 
+}
 
-func View(m Model) string {
-	footer := ""
+func (m Model) View() string {
+	footer := "This is the footer"
 
 	if m.ShowAll {
 		fullHelp := m.help.View(keys.Keys)
-		return lipgloss.JoinVertical(lipgloss.Top, footer,fullHelp )
+		return lipgloss.JoinVertical(lipgloss.Top, footer, fullHelp)
 	}
 	return footer
 }

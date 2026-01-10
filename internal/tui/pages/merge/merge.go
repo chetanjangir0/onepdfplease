@@ -88,8 +88,8 @@ func (m Model) View() string {
 	}
 
 	return style.RenderTwoFullRows(
-		m.ctx.ScreenWidth,
-		m.ctx.ScreenHeight,
+		m.ctx.TermWidth,
+		m.ctx.MainContentHeight,
 		fileListStyle,
 		outputPickerStyle,
 		m.fileList.View(),

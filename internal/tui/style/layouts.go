@@ -4,9 +4,9 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-func RenderTwoFullCols(termWidth, termHeight int, style lipgloss.Style, col1View, col2View string) string {
+func RenderTwoFullCols(termWidth, Height int, style lipgloss.Style, col1View, col2View string) string {
 	padding := 0
-	height := SplitHeightByPercentage(termHeight, []float64{1}, padding, 2)
+	height := SplitHeightByPercentage(Height, []float64{1}, padding, 2)
 	widths := SplitWidthByPercentage(termWidth, []float64{0.5, 0.5}, padding, 2)
 
 	// truncateView

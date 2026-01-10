@@ -1,8 +1,9 @@
 package context
 
 type ProgramContext struct {
-	ScreenHeight      int
-	ScreenWidth       int
+	MainContentHeight int
+	TermWidth         int
+	TermHeight        int
 	// Config            *config.Config
-	Error             error
+	Error error
 }

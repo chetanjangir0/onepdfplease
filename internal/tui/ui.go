@@ -4,10 +4,13 @@ import (
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/components/footer"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/menu"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/merge"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
 )
 
@@ -19,6 +22,7 @@ type model struct {
 	// each page has its own model
 	menuModel  menu.Model
 	mergeModel merge.Model
+	footer     footer.Model
 }
 
 func InitialModel() model {
@@ -28,6 +32,7 @@ func InitialModel() model {
 	m.ctx = &context.ProgramContext{}
 	m.menuModel = menu.NewModel(m.ctx)
 	m.mergeModel = merge.NewModel(m.ctx)
+	m.footer = footer.NewModel(m.ctx)
 	return m
 }
 
@@ -43,6 +48,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c":
 			m.quitting = true
 			return m, tea.Quit
+		case "?":
+			if !m.footer.ShowAll {
+				m.ctx.MainContentHeight = m.ctx.MainContentHeight +
+					style.FooterHeight - style.ExpandedHelpHeight
+			} else {
+				m.ctx.MainContentHeight = m.ctx.MainContentHeight +
+					style.ExpandedHelpHeight - style.FooterHeight
+			}
+			m.footer.ShowAll = !m.footer.ShowAll
 		}
 	case messages.Navigate:
 		m.currentPage = msg.Page
@@ -61,18 +75,25 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
+	var view string
 	switch m.currentPage {
 	case types.MenuPage:
-		return m.menuModel.View()
+		view = m.menuModel.View()
 	case types.MergePage:
-		return m.mergeModel.View()
+		view = m.mergeModel.View()
 	}
-	return ""
+	return lipgloss.JoinVertical(lipgloss.Left, view, m.footer.View())
 
 }
 
 func (m *model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
 	log.Println("window size changed", "width", msg.Width, "height", msg.Height)
-	m.ctx.ScreenWidth = msg.Width
-	m.ctx.ScreenHeight = msg.Height
+	m.ctx.TermWidth = msg.Width
+	m.ctx.TermHeight = msg.Height
+	m.ctx.MainContentHeight = msg.Height
+	if m.footer.ShowAll {
+		m.ctx.MainContentHeight = msg.Height - style.ExpandedHelpHeight
+	} else {
+		m.ctx.MainContentHeight = msg.Height - style.FooterHeight
+	}
 }

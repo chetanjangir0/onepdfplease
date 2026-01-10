@@ -23,6 +23,11 @@ var DefaultStyle = &Style{
 		BorderForeground(lipgloss.Color("240")), // Dim gray
 }
 
+var (
+	FooterHeight       = 1
+	ExpandedHelpHeight = 17
+)
+
 func SplitHeightByPercentage(height int, percentages []float64, padding, borderHeight int) []int {
 	numRows := len(percentages)
 	if numRows == 0 {
