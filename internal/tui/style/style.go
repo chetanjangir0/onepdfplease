@@ -25,7 +25,7 @@ var DefaultStyle = &Style{
 
 var (
 	FooterHeight       = 1
-	ExpandedHelpHeight = 17
+	ExpandedHelpHeight = 4 
 )
 
 func SplitHeightByPercentage(height int, percentages []float64, padding, borderHeight int) []int {
