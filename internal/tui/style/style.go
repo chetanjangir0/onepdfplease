@@ -11,6 +11,9 @@ import (
 type Style struct {
 	FocusedBorder lipgloss.Style
 	BlurredBorder lipgloss.Style
+	ErrorStyle    lipgloss.Style
+	SuccessStyle  lipgloss.Style
+	NeutralStyle  lipgloss.Style
 }
 
 var DefaultStyle = &Style{
@@ -21,6 +24,9 @@ var DefaultStyle = &Style{
 	BlurredBorder: lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("240")), // Dim gray
+	ErrorStyle:   lipgloss.NewStyle().Foreground(lipgloss.Color("9")), // red
+	SuccessStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("10")),
+	NeutralStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("7")), // gray
 }
 
 var (

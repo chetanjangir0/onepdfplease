@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"fmt"
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -29,7 +30,9 @@ func InitialModel() model {
 	m := model{
 		currentPage: types.MenuPage,
 	}
-	m.ctx = &context.ProgramContext{}
+	m.ctx = &context.ProgramContext{
+		StatusType: context.None,
+	}
 	m.menuModel = menu.NewModel(m.ctx)
 	m.mergeModel = merge.NewModel(m.ctx)
 	m.footer = footer.NewModel(m.ctx)
@@ -44,6 +47,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.onWindowSizeChanged(msg)
 	case tea.KeyMsg:
+		m.footer.ClearStatus()
+
 		switch keypress := msg.String(); keypress {
 		case "q", "ctrl+c":
 			m.quitting = true
@@ -61,6 +66,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case messages.Navigate:
 		m.currentPage = msg.Page
 		return m, nil
+	case messages.PDFOperationStatus:
+		if msg.Err != nil {
+			m.footer.ShowError(fmt.Sprintf("Failed: %v", msg.Err))
+		} else {
+			m.footer.ShowSuccess(fmt.Sprintf("%s completed successfully", msg.TaskType))
+		}
 	}
 
 	var cmd tea.Cmd

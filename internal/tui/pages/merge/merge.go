@@ -4,8 +4,6 @@ package merge
 // change focus using tab
 // fix border changing after selected files become active
 import (
-	"log"
-
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
@@ -58,9 +56,6 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		}
 	case messages.OutputButtonClicked:
 		return m, utils.Merge(m.fileList.GetFilePaths(), "./merged.pdf")
-	// TODO add proper error handeling
-	case messages.PDFOperationStatus:
-		log.Println("opError", msg.Err, msg.TaskType)
 	}
 
 	var cmd tea.Cmd
