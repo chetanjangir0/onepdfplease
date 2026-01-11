@@ -45,7 +45,8 @@ func (m Model) View() string {
 	footer := statusStyle.Render(fmt.Sprintf("%s %s", icon, m.ctx.Status))
 
 	if m.ShowAll {
-		fullHelp := m.help.View(keys.ListFilesKeys)
+		keyMap := keys.CreateKeyMapForPage(m.ctx.CurrentPage)
+		fullHelp := m.help.View(keyMap)
 		return lipgloss.JoinVertical(lipgloss.Top, footer, fullHelp)
 	}
 	return footer

@@ -1,57 +1,55 @@
 package keys
 
 import (
+	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
 )
 
-type ListFileKeymap struct {
-	Add       key.Binding
-	Remove    key.Binding
-	Merge     key.Binding
-	Save      key.Binding
-	ShiftUp   key.Binding
-	ShiftDown key.Binding
-	Help      key.Binding
+type KeyMap struct {
+	Page types.Page
+	Help key.Binding
+	Quit key.Binding
 }
 
-func (k ListFileKeymap) ShortHelp() []key.Binding {
-	return []key.Binding{k.Add, k.Remove, k.Merge, k.Save, k.Help}
-}
-
-func (k ListFileKeymap) FullHelp() [][]key.Binding {
-	return [][]key.Binding{
-		{k.Add, k.Remove, k.Merge, k.Save}, // first column
-		{k.ShiftUp, k.ShiftDown, k.Help},   // second column
-	}
-}
-
-var ListFilesKeys = ListFileKeymap{
-	Add: key.NewBinding(
-		key.WithKeys("a"),
-		key.WithHelp("a", "Add files"),
-	),
-	Remove: key.NewBinding(
-		key.WithKeys("d"),
-		key.WithHelp("d", "Remove files"),
-	),
-	Merge: key.NewBinding(
-		key.WithKeys("m"),
-		key.WithHelp("m", "Merge PDFs"),
-	),
-	Save: key.NewBinding(
-		key.WithKeys("s"),
-		key.WithHelp("s", "Save PDF"),
-	),
-	ShiftDown: key.NewBinding(
-		key.WithKeys("J", "ctrl+down"),
-		key.WithHelp("J/ctrl+down", "Shift Down"),
-	),
-	ShiftUp: key.NewBinding(
-		key.WithKeys("K", "ctrl+up"),
-		key.WithHelp("K/ctrl+up", "Shift Up"),
-	),
+var keys = &KeyMap{
 	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
 	),
+	Quit: key.NewBinding(
+		key.WithKeys("q", "esc"),
+		key.WithHelp("q", "quit"),
+	),
+}
+
+func CreateKeyMapForPage(page types.Page) help.KeyMap {
+	keys.Page = page
+	return keys
+}
+
+func (k KeyMap) ShortHelp() []key.Binding {
+	return []key.Binding{k.Help}
+}
+
+func (k KeyMap) FullHelp() [][]key.Binding {
+	var additionalKeys [][]key.Binding
+	switch k.Page {
+	case types.MergePage:
+		additionalKeys = MergeFullHelp()
+	case types.MenuPage:
+		additionalKeys = MenuFullHelp()
+	default:
+		additionalKeys = MenuFullHelp()
+	}
+
+	allKeys := append(additionalKeys, k.GlobalKeys())
+	return allKeys
+}
+
+func (k KeyMap) GlobalKeys() []key.Binding {
+	return []key.Binding{
+		k.Help,
+		k.Quit,
+	}
 }

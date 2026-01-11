@@ -16,9 +16,8 @@ import (
 )
 
 type model struct {
-	quitting    bool
-	currentPage types.Page
-	ctx         *context.ProgramContext
+	quitting bool
+	ctx      *context.ProgramContext
 
 	// each page has its own model
 	menuModel  menu.Model
@@ -27,11 +26,10 @@ type model struct {
 }
 
 func InitialModel() model {
-	m := model{
-		currentPage: types.MenuPage,
-	}
+	m := model{}
 	m.ctx = &context.ProgramContext{
-		StatusType: context.None,
+		StatusType:  context.None,
+		CurrentPage: types.MenuPage,
 	}
 	m.menuModel = menu.NewModel(m.ctx)
 	m.mergeModel = merge.NewModel(m.ctx)
@@ -64,7 +62,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.footer.ShowAll = !m.footer.ShowAll
 		}
 	case messages.Navigate:
-		m.currentPage = msg.Page
+		m.ctx.CurrentPage = msg.Page
 		return m, nil
 	case messages.PDFOperationStatus:
 		if msg.Err != nil {
@@ -75,7 +73,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	var cmd tea.Cmd
-	switch m.currentPage {
+	switch m.ctx.CurrentPage {
 	case types.MenuPage:
 		m.menuModel, cmd = m.menuModel.Update(msg)
 	case types.MergePage:
@@ -87,7 +85,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	var view string
-	switch m.currentPage {
+	switch m.ctx.CurrentPage {
 	case types.MenuPage:
 		view = m.menuModel.View()
 	case types.MergePage:

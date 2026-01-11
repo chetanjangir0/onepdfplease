@@ -35,7 +35,7 @@ func (i file) FilterValue() string { return "" }
 
 type Model struct {
 	files       list.Model
-	keys        keys.ListFileKeymap
+	keys        keys.MergeKeymap
 	help        help.Model
 	filePicker  filepicker.Model
 	PickingFile bool
@@ -77,7 +77,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 
 	return Model{
 		files:      l,
-		keys:       keys.ListFilesKeys,
+		keys:       keys.MergeKeys,
 		help:       help.New(),
 		filePicker: fp,
 		ctx:        ctx,
@@ -107,8 +107,6 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			log.Println("merging PDFs")
 		case key.Matches(msg, m.keys.Save):
 			log.Println("saving PDFs")
-		case key.Matches(msg, m.keys.Help):
-			m.help.ShowAll = !m.help.ShowAll
 		case key.Matches(msg, m.keys.ShiftDown):
 			curIdx := m.files.GlobalIndex()
 			m.swapItems(curIdx, curIdx+1)
