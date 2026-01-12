@@ -33,7 +33,7 @@ func Merge(inFiles []string, outFile string) tea.Cmd {
 	}
 }
 
-func Encrypt(inFiles []string, outFilePath, outFilePrefix string, password string) tea.Cmd {
+func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string) tea.Cmd {
 	return func() tea.Msg {
 		taskType := "Encrypt"
 		if len(password) == 0 {

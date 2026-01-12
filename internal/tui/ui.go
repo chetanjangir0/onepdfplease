@@ -9,6 +9,7 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/footer"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/encrypt"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/menu"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/merge"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
@@ -20,9 +21,10 @@ type model struct {
 	ctx      *context.ProgramContext
 
 	// each page has its own model
-	menuModel  menu.Model
-	mergeModel merge.Model
-	footer     footer.Model
+	menuModel    menu.Model
+	mergeModel   merge.Model
+	encryptModel encrypt.Model
+	footer       footer.Model
 }
 
 func InitialModel() model {
@@ -33,6 +35,7 @@ func InitialModel() model {
 	}
 	m.menuModel = menu.NewModel(m.ctx)
 	m.mergeModel = merge.NewModel(m.ctx)
+	m.encryptModel = encrypt.NewModel(m.ctx)
 	m.footer = footer.NewModel(m.ctx)
 	return m
 }
@@ -78,6 +81,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.menuModel, cmd = m.menuModel.Update(msg)
 	case types.MergePage:
 		m.mergeModel, cmd = m.mergeModel.Update(msg)
+	case types.EncryptPage:
+		m.encryptModel, cmd = m.encryptModel.Update(msg)
 	}
 
 	return m, cmd
@@ -90,6 +95,8 @@ func (m model) View() string {
 		view = m.menuModel.View()
 	case types.MergePage:
 		view = m.mergeModel.View()
+	case types.EncryptPage:
+		view = m.encryptModel.View()
 	}
 	return lipgloss.JoinVertical(lipgloss.Left, view, m.footer.View())
 
