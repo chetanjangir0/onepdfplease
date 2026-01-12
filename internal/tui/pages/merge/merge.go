@@ -15,29 +15,33 @@ import (
 )
 
 type Model struct {
-	focusIndex   int // 0 for fileList 1 for outputPicker
-	fileList     listfiles.Model
-	outputPicker userinputs.Model
-	ctx          *context.ProgramContext
+	focusIndex        int // 0 for fileList 1 for outputPicker
+	fileList          listfiles.Model
+	outputPicker      userinputs.Model
+	ctx               *context.ProgramContext
+	outputPlaceholder string
 }
 
 func NewModel(ctx *context.ProgramContext) Model {
+	m := Model{
+		outputPlaceholder: "./merged.pdf",
+	}
 	lf := listfiles.NewModel(ctx)
 	lf.SetTitle("Choose Order")
 
 	outputFields := []userinputs.Field{
 		{
-			Placeholder: "./merged.pdf",
+			Placeholder: m.outputPlaceholder,
 			Prompt:      "Output File: ",
 		},
 	}
 	op := userinputs.NewModel(outputFields)
 	op.ButtonText = "Merge and Save"
-	return Model{
-		fileList:     lf,
-		outputPicker: op,
-		ctx:          ctx,
-	}
+
+	m.fileList = lf
+	m.outputPicker = op
+	m.ctx = ctx
+	return m
 }
 
 func (m Model) Init() tea.Cmd {
@@ -55,7 +59,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, nil
 		}
 	case messages.OutputButtonClicked:
-		return m, utils.Merge(m.fileList.GetFilePaths(), "./merged.pdf")
+		outFile := m.outputPlaceholder
+		userValues := m.outputPicker.GetInputValues()
+		if len(userValues) == 1 && len(userValues[0]) != 0 {
+			outFile = userValues[0]
+		}
+		return m, utils.Merge(m.fileList.GetFilePaths(), outFile)
 	}
 
 	var cmd tea.Cmd
