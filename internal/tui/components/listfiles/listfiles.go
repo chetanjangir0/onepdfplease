@@ -35,7 +35,7 @@ func (i file) FilterValue() string { return "" }
 
 type Model struct {
 	files       list.Model
-	keys        keys.MergeKeymap
+	keys        keys.FileListKeymap
 	help        help.Model
 	filePicker  filepicker.Model
 	PickingFile bool
@@ -77,7 +77,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 
 	return Model{
 		files:      l,
-		keys:       keys.MergeKeys,
+		keys:       keys.FileListKeys,
 		help:       help.New(),
 		filePicker: fp,
 		ctx:        ctx,
