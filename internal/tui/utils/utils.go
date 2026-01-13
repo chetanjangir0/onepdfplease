@@ -1,4 +1,5 @@
 package utils
+
 // TODO:
 // show all errors when batch encrypt and decrypt using floating component
 
@@ -138,4 +139,44 @@ func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string) tea.
 
 	}
 
+}
+
+func Split(inFile, outFilePath, outFilePrefix string, selectedPages []string, mergeIntoOne bool) tea.Cmd {
+	return func() tea.Msg {
+		taskType := "Splitting"
+
+		if mergeIntoOne {
+			outFile := filepath.Join(outFilePath, outFilePrefix+filepath.Base(inFile))
+			if err := api.TrimFile(inFile, outFile, selectedPages, nil); err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      err,
+				}
+			}
+		} else {
+			var failedRanges []string
+			for _, pageRange := range selectedPages {
+				outFile := filepath.Join(outFilePath, outFilePrefix+pageRange)
+				if err := api.TrimFile(inFile, outFile, []string{pageRange}, nil); err != nil {
+					failedRanges = append(failedRanges, pageRange)
+				}
+			}
+
+			if len(failedRanges) > 0 {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err: fmt.Errorf(
+						"Failed to split %d range(s): %s",
+						len(failedRanges),
+						strings.Join(failedRanges, ","),
+					),
+				}
+			}
+		}
+
+		return messages.PDFOperationStatus{
+			TaskType: taskType,
+		}
+
+	}
 }
