@@ -1,4 +1,5 @@
 package encrypt
+
 // TODO
 // add option to do inplace encryption
 
@@ -11,6 +12,12 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
+)
+
+const (
+	passwdIdx = iota
+	pathIdx
+	prefixIdx
 )
 
 type Model struct {
@@ -30,20 +37,20 @@ func NewModel(ctx *context.ProgramContext) Model {
 	lf := listfiles.NewModel(ctx)
 	lf.SetTitle("Choose Files")
 
-	inputFields := []userinputs.Field{
-		{
-			Placeholder: "",
-			Prompt:      "Password: ",
-		},
-		{
-			Placeholder: m.pathPlaceholder,
-			Prompt:      "Output Path: ",
-		},
-		{
-			Placeholder: m.prefixPlaceholder,
-			Prompt:      "Output File Prefix: ",
-		},
+	inputFields := make([]userinputs.Field, 3)
+	inputFields[passwdIdx] = userinputs.Field{
+		Placeholder: "",
+		Prompt:      "Password: ",
 	}
+	inputFields[pathIdx] = userinputs.Field{
+		Placeholder: m.pathPlaceholder,
+		Prompt:      "Output Path: ",
+	}
+	inputFields[prefixIdx] = userinputs.Field{
+		Placeholder: m.prefixPlaceholder,
+		Prompt:      "Output File Prefix: ",
+	}
+
 	m.userInputs = userinputs.NewModel(inputFields)
 	m.userInputs.ButtonText = "Encrypt and Save"
 	m.fileList = lf
@@ -72,14 +79,14 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		password := ""
 
 		userValues := m.userInputs.GetInputValues()
-		if len(userValues) >= 1 {
-			password = userValues[0]
+		if len(userValues) > passwdIdx { // the encrypt function will handle 0 length password
+			password = userValues[passwdIdx]
 		}
-		if len(userValues) >= 2 && len(userValues[1]) != 0 {
-			outPath = userValues[1]
+		if len(userValues) > pathIdx && len(userValues[pathIdx]) != 0 {
+			outPath = userValues[pathIdx]
 		}
-		if len(userValues) >= 3 && len(userValues[2]) != 0 {
-			outPrefix = userValues[2]
+		if len(userValues) > prefixIdx && len(userValues[prefixIdx]) != 0 {
+			outPrefix = userValues[prefixIdx]
 		}
 		return m, utils.Encrypt(m.fileList.GetFilePaths(), password, outPath, outPrefix)
 	}

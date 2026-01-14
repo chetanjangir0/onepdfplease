@@ -14,6 +14,10 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
+const (
+	outputFileIdx = iota
+)
+
 type Model struct {
 	focusIndex        int // 0 for fileList 1 for outputPicker
 	fileList          listfiles.Model
@@ -29,12 +33,12 @@ func NewModel(ctx *context.ProgramContext) Model {
 	lf := listfiles.NewModel(ctx)
 	lf.SetTitle("Choose Order")
 
-	outputFields := []userinputs.Field{
-		{
-			Placeholder: m.outputPlaceholder,
-			Prompt:      "Output File: ",
-		},
+	outputFields := make([]userinputs.Field, 1)
+	outputFields[outputFileIdx] = userinputs.Field{
+		Placeholder: m.outputPlaceholder,
+		Prompt:      "Output File: ",
 	}
+
 	op := userinputs.NewModel(outputFields)
 	op.ButtonText = "Merge and Save"
 
@@ -61,8 +65,8 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	case messages.OutputButtonClicked:
 		outFile := m.outputPlaceholder
 		userValues := m.outputPicker.GetInputValues()
-		if len(userValues) == 1 && len(userValues[0]) != 0 {
-			outFile = userValues[0]
+		if len(userValues) > outputFileIdx && len(userValues[outputFileIdx]) != 0 {
+			outFile = userValues[outputFileIdx]
 		}
 		return m, utils.Merge(m.fileList.GetFilePaths(), outFile)
 	}
