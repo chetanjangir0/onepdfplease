@@ -24,6 +24,7 @@ type Model struct {
 	Inputs     []textinput.Model
 	CursorMode cursor.Mode
 	ButtonText string
+	Disabled   map[int]bool
 }
 
 type Field struct {
@@ -31,9 +32,21 @@ type Field struct {
 	Prompt      string
 }
 
+func (m *Model) EnableInput(idx int) {
+	if m.Disabled[idx] {
+		m.Disabled[idx] = false
+	}
+}
+
+func (m *Model) DisableInput(idx int) {
+	if !m.Disabled[idx] {
+		m.Disabled[idx] = true
+	}
+}
+
 func (m Model) GetInputValues() []string {
 	values := make([]string, len(m.Inputs))
-	
+
 	for i, Inp := range m.Inputs {
 		values[i] = Inp.Value()
 	}
@@ -85,14 +98,20 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			if s == "enter" && m.FocusIndex == len(m.Inputs) {
 				return m, func() tea.Msg {
 					return messages.OutputButtonClicked{}
-				} 
+				}
 			}
 
 			// Cycle indexes
 			if s == "up" || s == "ctrl+p" {
 				m.FocusIndex--
+				for m.Disabled[m.FocusIndex] {
+					m.FocusIndex--
+				}
 			} else {
 				m.FocusIndex++
+				for m.Disabled[m.FocusIndex] {
+					m.FocusIndex++
+				}
 			}
 
 			if m.FocusIndex > len(m.Inputs) {
@@ -143,15 +162,18 @@ func (m Model) View() string {
 	b.WriteRune('\n')
 
 	for i := range m.Inputs {
+		if m.Disabled[i] {
+			continue
+		}
 		b.WriteString(m.Inputs[i].View())
 		if i < len(m.Inputs)-1 {
 			b.WriteRune('\n')
 		}
 	}
 
-	button := fmt.Sprintf("[ %s ]", blurredStyle.Render(m.ButtonText)) 
+	button := fmt.Sprintf("[ %s ]", blurredStyle.Render(m.ButtonText))
 	if m.FocusIndex == len(m.Inputs) {
-		button = fmt.Sprintf("[ %s ]", focusedStyle.Render(m.ButtonText)) 
+		button = fmt.Sprintf("[ %s ]", focusedStyle.Render(m.ButtonText))
 	}
 	fmt.Fprintf(&b, "\n\n%s\n\n", button)
 	return style.DefaultStyle.MarginLeftStyle.Render(b.String())
