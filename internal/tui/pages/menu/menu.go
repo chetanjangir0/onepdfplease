@@ -77,6 +77,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 	l.Styles.Title = titleStyle
 	l.Styles.PaginationStyle = paginationStyle
 	l.SetShowHelp(false)
+	l.KeyMap.Quit.SetEnabled(false)
 	return Model{
 		tools: l,
 		ctx:   ctx,
