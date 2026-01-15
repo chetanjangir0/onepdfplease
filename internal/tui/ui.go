@@ -66,10 +66,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					style.ExpandedHelpHeight - style.FooterHeight
 			}
 			m.footer.ShowAll = !m.footer.ShowAll
-		case "b":
-			return m, func() tea.Msg {
-				return messages.Navigate{Page: types.MenuPage}
-			}
 		}
 	case messages.Navigate:
 		m.ctx.CurrentPage = msg.Page

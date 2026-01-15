@@ -20,11 +20,11 @@ var (
 )
 
 type Model struct {
-	FocusIndex int
-	Inputs     []textinput.Model
-	CursorMode cursor.Mode
-	ButtonText string
-	Disabled   map[int]bool
+	FocusIndex   int
+	Inputs       []textinput.Model
+	CursorMode   cursor.Mode
+	ButtonText   string
+	Disabled     map[int]bool
 }
 
 type Field struct {

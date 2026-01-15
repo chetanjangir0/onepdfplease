@@ -65,8 +65,6 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "ctrl+c", "q":
-			return m, tea.Quit
 		case "ctrl+y":
 			return m, func() tea.Msg {
 				return messages.QuitFilePicker{Paths: m.SelectedFiles} // TODO: use reference here
