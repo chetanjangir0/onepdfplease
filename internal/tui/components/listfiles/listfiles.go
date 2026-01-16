@@ -95,7 +95,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			return m, m.filePicker.Init()
 		case key.Matches(msg, m.keys.Remove):
 			m.files.RemoveItem(m.files.GlobalIndex())
-			m.files.CursorUp()
+			if m.files.Cursor() >= len(m.files.Items()) {
+				m.files.CursorUp()
+			}
 			return m, nil
 		case key.Matches(msg, m.keys.ShiftDown):
 			curIdx := m.files.GlobalIndex()
