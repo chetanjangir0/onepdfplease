@@ -68,6 +68,8 @@ func NewModel(fields []Field) Model {
 		Inputs:     make([]textinput.Model, len(fields)),
 		CursorMode: cursor.CursorStatic,
 		ButtonText: "Submit",
+		Disabled:   make(map[int]bool),
+		BoolInput:  make(map[int]bool),
 	}
 
 	var t textinput.Model
