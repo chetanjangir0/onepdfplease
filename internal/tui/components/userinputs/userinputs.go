@@ -185,10 +185,9 @@ func (m Model) View() string {
 	b.WriteRune('\n')
 
 	for i := range m.Inputs {
-		if m.Disabled[i] {
-			continue
+		if !m.Disabled[i] {
+			b.WriteString(m.Inputs[i].View())
 		}
-		b.WriteString(m.Inputs[i].View())
 		if i < len(m.Inputs)-1 {
 			b.WriteRune('\n')
 		}
