@@ -169,7 +169,9 @@ func (m *Model) updateInputs(msg tea.Msg) tea.Cmd {
 	// Only text Inputs with Focus() set will respond, so it's safe to simply
 	// update all of them here without any further logic.
 	for i := range m.Inputs {
-		m.Inputs[i], cmds[i] = m.Inputs[i].Update(msg)
+		if !m.BoolInput[i] {
+			m.Inputs[i], cmds[i] = m.Inputs[i].Update(msg)
+		}
 	}
 
 	return tea.Batch(cmds...)
