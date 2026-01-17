@@ -101,7 +101,7 @@ func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 
 }
 
-func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string) tea.Cmd {
+func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPlace bool) tea.Cmd {
 	return func() tea.Msg {
 		taskType := "Decryption"
 		if len(password) == 0 {
@@ -122,7 +122,12 @@ func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string) tea.
 
 		var failedFiles []string
 		for _, f := range inFiles {
-			outFile := filepath.Join(outFilePath, outFilePrefix+filepath.Base(f))
+			var outFile string
+			if !inPlace {
+				outFile = filepath.Join(outFilePath, outFilePrefix+filepath.Base(f))
+			} else {
+				outFile = ""
+			}
 			if err := api.DecryptFile(f, outFile, conf); err != nil {
 				failedFiles = append(failedFiles, filepath.Base(f))
 			}

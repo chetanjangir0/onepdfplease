@@ -1,9 +1,5 @@
 package userinputs
 
-// TODO
-// Add bool type inputs
-// let the page handle the logic to turn on/off the depended inputs(on bool types)
-
 import (
 	"fmt"
 	"strings"
