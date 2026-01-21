@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	mergeIntoOneIdx = iota
+	exteractAllIdx = iota
+	mergeIntoOneIdx
 	pathIdx
 	prefixIdx
 	selectedPagesIdx
@@ -43,7 +44,12 @@ func NewModel(ctx *context.ProgramContext) Model {
 	lf := listfiles.NewModel(ctx)
 	lf.SetTitle("Choose Files")
 
-	inputFields := make([]userinputs.Field, 4)
+	inputFields := make([]userinputs.Field, 5)
+	inputFields[exteractAllIdx] = userinputs.Field{
+		Placeholder: "",
+		Prompt:      "Extract all pages into seperate file?: ",
+		IsBoolType:  true,
+	}
 	inputFields[mergeIntoOneIdx] = userinputs.Field{
 		Placeholder: "",
 		Prompt:      "Split and Merge into one file?: ",
@@ -108,13 +114,26 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 				return messages.Navigate{Page: types.MenuPage}
 			}
 		}
+	case messages.BoolInputToggled:
+		if msg.InputIndex == exteractAllIdx {
+			if msg.Value { 
+				m.userInputs.DisableInput([]int{mergeIntoOneIdx, pathIdx, prefixIdx, selectedPagesIdx})
+			} else { 
+				m.userInputs.EnableInput([]int{mergeIntoOneIdx, pathIdx, prefixIdx, selectedPagesIdx})
+			}
+		}
+		return m, nil
 	case messages.OutputButtonClicked:
 		outPath := m.pathPlaceholder
 		outPrefix := m.prefixPlaceholder
 		selectedPages := ""
 		mergeIntoOne := false
+		extractAllPages := false
 
 		userValues := m.userInputs.GetInputValues()
+		if len(userValues) > exteractAllIdx && userValues[exteractAllIdx] == "yes" {
+			extractAllPages = true
+		}
 		if len(userValues) > mergeIntoOneIdx && userValues[mergeIntoOneIdx] == "yes" {
 			mergeIntoOne = true
 		}
@@ -128,7 +147,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			selectedPages = userValues[selectedPagesIdx]
 		}
 
-		return m, utils.Split(m.fileList.GetFilePaths(), outPath, outPrefix, []string{selectedPages}, mergeIntoOne)
+		return m, utils.Split(m.fileList.GetFilePaths(), outPath, outPrefix, []string{selectedPages}, mergeIntoOne, extractAllPages)
 	}
 
 	return m, cmd

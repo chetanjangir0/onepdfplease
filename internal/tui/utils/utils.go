@@ -151,9 +151,12 @@ func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 
 }
 
-func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []string, mergeIntoOne bool) tea.Cmd {
+func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []string, mergeIntoOne, extractAll bool) tea.Cmd {
 	return func() tea.Msg {
 		taskType := "Splitting"
+		successMsg := messages.PDFOperationStatus{
+			TaskType: taskType,
+		}
 
 		if len(inFiles) > 1 {
 			return messages.PDFOperationStatus{
@@ -168,6 +171,17 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 		}
 		inFile := inFiles[0]
 
+		if extractAll {
+			if err := api.SplitFile(inFile, outFilePath, 1, nil); err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      err,
+				}
+			}
+
+			return successMsg
+		}
+
 		if mergeIntoOne {
 			outFile := filepath.Join(outFilePath, outFilePrefix+filepath.Base(inFile))
 			if err := api.TrimFile(inFile, outFile, selectedPages, nil); err != nil {
@@ -176,30 +190,29 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 					Err:      err,
 				}
 			}
-		} else {
-			var failedRanges []string
-			for _, pageRange := range selectedPages {
-				outFile := filepath.Join(outFilePath, outFilePrefix+pageRange+".pdf")
-				if err := api.TrimFile(inFile, outFile, []string{pageRange}, nil); err != nil {
-					failedRanges = append(failedRanges, pageRange)
-				}
-			}
 
-			if len(failedRanges) > 0 {
-				return messages.PDFOperationStatus{
-					TaskType: taskType,
-					Err: fmt.Errorf(
-						"Failed to split %d range(s): %s",
-						len(failedRanges),
-						strings.Join(failedRanges, ","),
-					),
-				}
+			return successMsg
+		}
+
+		var failedRanges []string
+		for _, pageRange := range selectedPages {
+			outFile := filepath.Join(outFilePath, outFilePrefix+pageRange+".pdf")
+			if err := api.TrimFile(inFile, outFile, []string{pageRange}, nil); err != nil {
+				failedRanges = append(failedRanges, pageRange)
 			}
 		}
 
-		return messages.PDFOperationStatus{
-			TaskType: taskType,
+		if len(failedRanges) > 0 {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err: fmt.Errorf(
+					"Failed to split %d range(s): %s",
+					len(failedRanges),
+					strings.Join(failedRanges, ","),
+				),
+			}
 		}
 
+		return successMsg
 	}
 }
