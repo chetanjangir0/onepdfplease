@@ -179,7 +179,7 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 		} else {
 			var failedRanges []string
 			for _, pageRange := range selectedPages {
-				outFile := filepath.Join(outFilePath, outFilePrefix+pageRange)
+				outFile := filepath.Join(outFilePath, outFilePrefix+pageRange+".pdf")
 				if err := api.TrimFile(inFile, outFile, []string{pageRange}, nil); err != nil {
 					failedRanges = append(failedRanges, pageRange)
 				}
