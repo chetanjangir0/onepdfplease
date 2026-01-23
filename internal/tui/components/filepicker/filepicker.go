@@ -60,6 +60,10 @@ func clearErrorAfter(t time.Duration) tea.Cmd {
 	})
 }
 
+func (m *Model) SetAllowedTypes(types []string) {
+	m.filepicker.AllowedTypes = types
+}
+
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:

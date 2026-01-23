@@ -51,6 +51,10 @@ func (m *Model) GetFilePaths() []string {
 	return paths
 }
 
+func (m *Model) SetAllowedFileTypes(types []string) {
+	m.filePicker.SetAllowedTypes(types)
+}
+
 func NewModel(ctx *context.ProgramContext) Model {
 	items := []list.Item{}
 
