@@ -216,3 +216,61 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 		return successMsg
 	}
 }
+
+func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool) tea.Cmd {
+	return func() tea.Msg {
+		taskType := "Image to Pdf"
+		successMsg :=  messages.PDFOperationStatus{
+			TaskType: taskType,
+		}
+
+		for _, f := range inFiles {
+			if _, err := os.Stat(f); err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      fmt.Errorf("file not found: %s", f),
+				}
+			}
+		}
+
+		if len(inFiles) == 0 {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      fmt.Errorf("There are no images to convert"),
+			}
+		}
+		if mergeIntoOne {
+			err := api.ImportImagesFile(inFiles, outFile, nil, nil)
+			if err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      err,
+				}
+			}
+			return successMsg
+		}
+
+		// TODO: add suffix instead of prefix numbering
+		var failedFiles []string
+		for i, inFile := range inFiles {
+			err := api.ImportImagesFile([]string{inFile}, fmt.Sprintf("%d_%s", i+1, outFile), nil, nil)
+			if err != nil {
+				failedFiles = append(failedFiles, filepath.Base(inFile))
+			}
+		}
+
+		if len(failedFiles) > 0 {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err: fmt.Errorf(
+					"Failed to convert %d file(s): %s",
+					len(failedFiles),
+					strings.Join(failedFiles, ","),
+				),
+			}
+		}
+
+		return successMsg
+
+	}
+}
