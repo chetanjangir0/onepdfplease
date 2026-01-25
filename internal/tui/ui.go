@@ -11,6 +11,7 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/decrypt"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/encrypt"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/img2pdf"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/menu"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/merge"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/split"
@@ -28,6 +29,7 @@ type model struct {
 	encryptModel encrypt.Model
 	decryptModel decrypt.Model
 	splitModel   split.Model
+	img2pdfModel img2pdf.Model
 	footer       footer.Model
 }
 
@@ -42,6 +44,7 @@ func InitialModel() model {
 	m.encryptModel = encrypt.NewModel(m.ctx)
 	m.decryptModel = decrypt.NewModel(m.ctx)
 	m.splitModel = split.NewModel(m.ctx)
+	m.img2pdfModel = img2pdf.NewModel(m.ctx)
 	m.footer = footer.NewModel(m.ctx)
 	return m
 }
@@ -93,6 +96,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.decryptModel, cmd = m.decryptModel.Update(msg)
 	case types.SplitPage:
 		m.splitModel, cmd = m.splitModel.Update(msg)
+	case types.Img2PdfPage:
+		m.img2pdfModel, cmd = m.img2pdfModel.Update(msg)
 	}
 
 	return m, cmd
@@ -111,6 +116,8 @@ func (m model) View() string {
 		view = m.decryptModel.View()
 	case types.SplitPage:
 		view = m.splitModel.View()
+	case types.Img2PdfPage:
+		view = m.img2pdfModel.View()
 	}
 	return lipgloss.JoinVertical(lipgloss.Left, view, m.footer.View())
 

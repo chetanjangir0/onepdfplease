@@ -8,4 +8,5 @@ const (
 	SplitPage
 	EncryptPage
 	DecryptPage
+	Img2PdfPage
 )
