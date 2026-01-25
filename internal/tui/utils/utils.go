@@ -306,6 +306,45 @@ func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool) tea.Cmd {
 	}
 }
 
+func ExtractImgs(inFiles []string, outFilePath string) tea.Cmd {
+	return func() tea.Msg {
+		taskType := "Extracting Images"
+		successMsg := messages.PDFOperationStatus{
+			TaskType: taskType,
+		}
+
+		if len(inFiles) > 1 {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      fmt.Errorf("You can only extract from one file at a time"),
+			}
+		} else if len(inFiles) == 0 {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      fmt.Errorf("Please add a file first"),
+			}
+		}
+		inFile := inFiles[0]
+
+		if _, err := os.Stat(inFile); err != nil {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      fmt.Errorf("file not found: %s", inFile),
+			}
+		}
+
+		if err := api.ExtractImagesFile(inFile, outFilePath, nil, nil); err != nil {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      err,
+			}
+		}
+
+		return successMsg
+
+	}
+}
+
 func getNextAvailablePath(basePath string) string {
 	if _, err := os.Stat(basePath); err != nil {
 		return basePath
