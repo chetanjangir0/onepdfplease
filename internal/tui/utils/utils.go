@@ -65,6 +65,16 @@ func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 				Err:      fmt.Errorf("There are no files to encrypt"),
 			}
 		}
+
+		for _, f := range inFiles {
+			if _, err := os.Stat(f); err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      fmt.Errorf("file not found: %s", f),
+				}
+			}
+		}
+
 		conf := model.NewDefaultConfiguration()
 		conf.UserPW = password
 		conf.OwnerPW = password
@@ -119,6 +129,16 @@ func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 				Err:      fmt.Errorf("There are no files to decrypt"),
 			}
 		}
+
+		for _, f := range inFiles {
+			if _, err := os.Stat(f); err != nil {
+				return messages.PDFOperationStatus{
+					TaskType: taskType,
+					Err:      fmt.Errorf("file not found: %s", f),
+				}
+			}
+		}
+
 		conf := model.NewDefaultConfiguration()
 		conf.UserPW = password
 
@@ -173,6 +193,13 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 			}
 		}
 		inFile := inFiles[0]
+
+		if _, err := os.Stat(inFile); err != nil {
+			return messages.PDFOperationStatus{
+				TaskType: taskType,
+				Err:      fmt.Errorf("file not found: %s", inFile),
+			}
+		}
 
 		if extractAll {
 			if err := api.SplitFile(inFile, outFilePath, 1, nil); err != nil {
