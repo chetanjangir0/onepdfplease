@@ -9,4 +9,5 @@ const (
 	EncryptPage
 	DecryptPage
 	Img2PdfPage
+	ExtractImgsPage
 )

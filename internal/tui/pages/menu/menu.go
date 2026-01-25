@@ -66,6 +66,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 		item{title: "Encrypt PDFs", page: types.EncryptPage},
 		item{title: "Decrypt PDFs", page: types.DecryptPage},
 		item{title: "Image(s) to pdf", page: types.Img2PdfPage},
+		item{title: "Extract Images", page: types.ExtractImgsPage},
 	}
 
 	const defaultWidth = 20
