@@ -14,6 +14,7 @@ import (
 
 const (
 	outputFileIdx = iota
+	mergeIntoOneIdx
 )
 
 type Model struct {
@@ -32,10 +33,15 @@ func NewModel(ctx *context.ProgramContext) Model {
 	lf.SetTitle("Choose Order")
 	lf.SetAllowedFileTypes([]string{".png", ".jpg", ".jpeg", ".tif", ".webp"})
 
-	outputFields := make([]userinputs.Field, 1)
+	outputFields := make([]userinputs.Field, 2)
 	outputFields[outputFileIdx] = userinputs.Field{
 		Placeholder: m.outputPlaceholder,
 		Prompt:      "Output File: ",
+	}
+	outputFields[mergeIntoOneIdx] = userinputs.Field{
+		Placeholder: m.outputPlaceholder,
+		Prompt:      "convert and Merge into one file?: ",
+		IsBoolType:  true,
 	}
 
 	op := userinputs.NewModel(outputFields)
@@ -86,11 +92,16 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		}
 	case messages.OutputButtonClicked:
 		outFile := m.outputPlaceholder
+		mergeIntoOne := false
+
 		userValues := m.outputPicker.GetInputValues()
 		if len(userValues) > outputFileIdx && len(userValues[outputFileIdx]) != 0 {
 			outFile = userValues[outputFileIdx]
 		}
-		return m, utils.Img2Pdf(m.fileList.GetFilePaths(), outFile, true)
+		if len(userValues) > mergeIntoOneIdx && userValues[mergeIntoOneIdx] == "yes" {
+			mergeIntoOne = true
+		}
+		return m, utils.Img2Pdf(m.fileList.GetFilePaths(), outFile, mergeIntoOne)
 	}
 
 	return m, cmd
