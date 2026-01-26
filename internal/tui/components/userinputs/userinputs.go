@@ -84,6 +84,8 @@ func NewModel(fields []Field) Model {
 		t.Cursor.SetMode(m.CursorMode)
 		if i == 0 {
 			t.Focus()
+			t.PromptStyle = focusedStyle
+			t.TextStyle = focusedStyle
 		}
 
 		m.Inputs[i] = t
