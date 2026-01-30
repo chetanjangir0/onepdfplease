@@ -32,7 +32,7 @@ Add below to your flake.nix
 
 ```nix
 {
-  inputs.onepdfplease.url = "github:<your-username>/onepdfplease";
+  inputs.onepdfplease.url = "github:chetanjangir0/onepdfplease";
 
   outputs = { self, nixpkgs, onepdfplease, ... }:
   {
