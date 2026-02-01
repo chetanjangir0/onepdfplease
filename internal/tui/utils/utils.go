@@ -11,13 +11,15 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/pdfcpu/pdfcpu/pkg/api"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
 )
 
-func Merge(inFiles []string, outFile string) tea.Cmd {
+func Merge(inFiles []string, outFile string, ctx *context.ProgramContext) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("merging files...")
 		taskType := "Merge"
 
 		for _, f := range inFiles {
@@ -50,8 +52,9 @@ func Merge(inFiles []string, outFile string) tea.Cmd {
 	}
 }
 
-func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPlace bool) tea.Cmd {
+func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPlace bool, ctx *context.ProgramContext) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("encrypting files...")
 		taskType := "Encryption"
 		if len(password) == 0 {
 			return messages.PDFOperationStatus{
@@ -114,8 +117,9 @@ func Encrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 
 }
 
-func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPlace bool) tea.Cmd {
+func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPlace bool, ctx *context.ProgramContext) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("decrypting files...")
 		taskType := "Decryption"
 		if len(password) == 0 {
 			return messages.PDFOperationStatus{
@@ -175,8 +179,17 @@ func Decrypt(inFiles []string, password, outFilePath, outFilePrefix string, inPl
 
 }
 
-func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []string, mergeIntoOne, extractAll bool) tea.Cmd {
+func Split(
+	inFiles []string,
+	outFilePath,
+	outFilePrefix string,
+	selectedPages []string,
+	mergeIntoOne,
+	extractAll bool,
+	ctx *context.ProgramContext,
+) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("splitting file...")
 		taskType := "Splitting"
 		successMsg := messages.PDFOperationStatus{
 			TaskType: taskType,
@@ -250,8 +263,9 @@ func Split(inFiles []string, outFilePath, outFilePrefix string, selectedPages []
 	}
 }
 
-func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool) tea.Cmd {
+func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool, ctx *context.ProgramContext) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("converting files...")
 		taskType := "Image to Pdf"
 		successMsg := messages.PDFOperationStatus{
 			TaskType: taskType,
@@ -272,7 +286,7 @@ func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool) tea.Cmd {
 				Err:      fmt.Errorf("There are no images to convert"),
 			}
 		}
-		
+
 		outFile = addExtension(outFile, ".pdf")
 		if mergeIntoOne {
 			err := api.ImportImagesFile(inFiles, getNextAvailablePath(outFile), nil, nil)
@@ -309,8 +323,9 @@ func Img2Pdf(inFiles []string, outFile string, mergeIntoOne bool) tea.Cmd {
 	}
 }
 
-func ExtractImgs(inFiles []string, outFilePath string) tea.Cmd {
+func ExtractImgs(inFiles []string, outFilePath string, ctx *context.ProgramContext) tea.Cmd {
 	return func() tea.Msg {
+		ctx.SetStatusProcessing("extracting images...")
 		taskType := "Extracting Images"
 		successMsg := messages.PDFOperationStatus{
 			TaskType: taskType,

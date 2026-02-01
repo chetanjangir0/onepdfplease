@@ -148,7 +148,15 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			selectedPages = userValues[selectedPagesIdx]
 		}
 
-		return m, utils.Split(m.fileList.GetFilePaths(), outPath, outPrefix, strings.Split(selectedPages, ","), mergeIntoOne, extractAllPages)
+		return m, utils.Split(
+			m.fileList.GetFilePaths(),
+			outPath,
+			outPrefix,
+			strings.Split(selectedPages, ","),
+			mergeIntoOne,
+			extractAllPages,
+			m.ctx,
+		)
 	}
 
 	return m, cmd

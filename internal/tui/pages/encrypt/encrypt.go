@@ -103,9 +103,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		}
 	case messages.BoolInputToggled:
 		if msg.InputIndex == inplaceIdx {
-			if msg.Value { 
+			if msg.Value {
 				m.userInputs.DisableInput([]int{pathIdx, prefixIdx})
-			} else { 
+			} else {
 				m.userInputs.EnableInput([]int{pathIdx, prefixIdx})
 			}
 		}
@@ -129,7 +129,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > prefixIdx && len(userValues[prefixIdx]) != 0 {
 			outPrefix = userValues[prefixIdx]
 		}
-		return m, utils.Encrypt(m.fileList.GetFilePaths(), password, outPath, outPrefix, inPlace)
+		return m, utils.Encrypt(m.fileList.GetFilePaths(), password, outPath, outPrefix, inPlace, m.ctx)
 	}
 
 	return m, cmd

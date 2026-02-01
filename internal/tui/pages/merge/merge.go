@@ -92,7 +92,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > outputFileIdx && len(userValues[outputFileIdx]) != 0 {
 			outFile = userValues[outputFileIdx]
 		}
-		return m, utils.Merge(m.fileList.GetFilePaths(), outFile)
+		return m, utils.Merge(m.fileList.GetFilePaths(), outFile, m.ctx)
 	}
 
 

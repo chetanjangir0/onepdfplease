@@ -90,7 +90,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 			outPath = userValues[pathIdx]
 		}
 
-		return m, utils.ExtractImgs(m.fileList.GetFilePaths(), outPath)
+		return m, utils.ExtractImgs(m.fileList.GetFilePaths(), outPath, m.ctx)
 	}
 
 	return m, cmd

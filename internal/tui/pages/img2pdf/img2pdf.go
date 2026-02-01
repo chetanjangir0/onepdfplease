@@ -101,7 +101,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > mergeIntoOneIdx && userValues[mergeIntoOneIdx] == "yes" {
 			mergeIntoOne = true
 		}
-		return m, utils.Img2Pdf(m.fileList.GetFilePaths(), outFile, mergeIntoOne)
+		return m, utils.Img2Pdf(m.fileList.GetFilePaths(), outFile, mergeIntoOne, m.ctx)
 	}
 
 	return m, cmd
