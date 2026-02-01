@@ -46,6 +46,14 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		additionalKeys = MenuFullHelp()
 	case types.EncryptPage:
 		additionalKeys = EncryptFullHelp()
+	case types.SplitPage:
+		additionalKeys = SplitFullHelp() 
+	case types.DecryptPage:
+		additionalKeys = DecryptFullHelp() 
+	case types.Img2PdfPage:
+		additionalKeys = Img2pdfFullHelp() 
+	case types.ExtractImgsPage:
+		additionalKeys = ExtractImgsFullHelp() 
 	default:
 		additionalKeys = k.GlobalFullHelp()
 	}
