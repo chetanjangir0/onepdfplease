@@ -9,6 +9,7 @@ import (
 type KeyMap struct {
 	Page types.Page
 	Help key.Binding
+	Back key.Binding
 	Quit key.Binding
 }
 
@@ -16,6 +17,10 @@ var keys = &KeyMap{
 	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
+	),
+	Back: key.NewBinding(
+		key.WithKeys("esc"),
+		key.WithHelp("Esc", "Go Back"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("q"),
@@ -52,6 +57,7 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 func (k KeyMap) GlobalKeys() []key.Binding {
 	return []key.Binding{
 		k.Help,
+		k.Back,
 		k.Quit,
 	}
 }
@@ -59,6 +65,7 @@ func (k KeyMap) GlobalKeys() []key.Binding {
 func (k KeyMap) GlobalFullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Help},
+		{k.Back},
 		{k.Quit},
 	}
 }
