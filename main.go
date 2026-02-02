@@ -1,8 +1,5 @@
 package main
 
-// todo
-// add progress bar
-
 import (
 	"fmt"
 	"os"
@@ -12,12 +9,14 @@ import (
 )
 
 func main() {
-	f, err := tea.LogToFile("./debug.log", "DEBUG:")
-	if err != nil {
-		fmt.Println("Fatal:", err)
-		os.Exit(1)
+	if os.Getenv("DEBUG") == "1" {
+		f, err := tea.LogToFile("./debug.log", "DEBUG:")
+		if err != nil {
+			fmt.Println("Fatal:", err)
+			os.Exit(1)
+		}
+		defer f.Close()
 	}
-	defer f.Close()
 
 	program := tea.NewProgram(tui.InitialModel(), tea.WithAltScreen())
 	if _, err := program.Run(); err != nil {
