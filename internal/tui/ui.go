@@ -87,6 +87,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			m.ctx.SetStatusSuccess(fmt.Sprintf("%s completed successfully", msg.TaskType))
 		}
+	case messages.ShowError:
+		if msg.Err != nil {
+			m.ctx.SetStatusError(fmt.Sprintf("Error: %v", msg.Err))
+		}
 	}
 
 	var cmds []tea.Cmd

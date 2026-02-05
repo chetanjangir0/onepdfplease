@@ -7,6 +7,10 @@ type PDFOperationStatus struct {
 	Err      error
 }
 
+type ShowError struct {
+	Err error
+}
+
 type Navigate struct {
 	Page types.Page
 }
