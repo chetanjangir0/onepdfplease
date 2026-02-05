@@ -7,13 +7,15 @@ import (
 )
 
 type KeyMap struct {
-	Page types.Page
-	Help key.Binding
-	Back key.Binding
-	Quit key.Binding
+	Page    types.Page
+	Help    key.Binding
+	Back    key.Binding
+	Quit    key.Binding
+	NxtTab  key.Binding
+	PrevTab key.Binding
 }
 
-var keys = &KeyMap{
+var Keys = &KeyMap{
 	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "toggle help"),
@@ -26,11 +28,19 @@ var keys = &KeyMap{
 		key.WithKeys("q"),
 		key.WithHelp("q", "quit"),
 	),
+	NxtTab: key.NewBinding(
+		key.WithKeys("tab"),
+		key.WithHelp("Tab", "Next tab"),
+	),
+	PrevTab: key.NewBinding(
+		key.WithKeys("shift+tab"),
+		key.WithHelp("shift+tab", "Previous tab"),
+	),
 }
 
 func CreateKeyMapForPage(page types.Page) help.KeyMap {
-	keys.Page = page
-	return keys
+	Keys.Page = page
+	return Keys
 }
 
 func (k KeyMap) ShortHelp() []key.Binding {
@@ -47,13 +57,13 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 	case types.EncryptPage:
 		additionalKeys = EncryptFullHelp()
 	case types.SplitPage:
-		additionalKeys = SplitFullHelp() 
+		additionalKeys = SplitFullHelp()
 	case types.DecryptPage:
-		additionalKeys = DecryptFullHelp() 
+		additionalKeys = DecryptFullHelp()
 	case types.Img2PdfPage:
-		additionalKeys = Img2pdfFullHelp() 
+		additionalKeys = Img2pdfFullHelp()
 	case types.ExtractImgsPage:
-		additionalKeys = ExtractImgsFullHelp() 
+		additionalKeys = ExtractImgsFullHelp()
 	default:
 		additionalKeys = k.GlobalFullHelp()
 	}
@@ -67,6 +77,8 @@ func (k KeyMap) GlobalKeys() []key.Binding {
 		k.Help,
 		k.Back,
 		k.Quit,
+		k.NxtTab,
+		k.PrevTab,
 	}
 }
 
@@ -75,5 +87,7 @@ func (k KeyMap) GlobalFullHelp() [][]key.Binding {
 		{k.Help},
 		{k.Back},
 		{k.Quit},
+		{k.NxtTab},
+		{k.PrevTab},
 	}
 }
