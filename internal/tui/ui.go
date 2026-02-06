@@ -2,7 +2,6 @@ package tui
 
 import (
 	"fmt"
-	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -53,7 +52,7 @@ func InitialModel() model {
 }
 
 func (m model) Init() tea.Cmd {
-	return m.footer.Init() 
+	return m.footer.Init()
 }
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
@@ -117,7 +116,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	cmds = append(cmds, cmd)
 
-
 	return m, tea.Batch(cmds...)
 }
 
@@ -144,7 +142,6 @@ func (m model) View() string {
 }
 
 func (m *model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
-	log.Println("window size changed", "width", msg.Width, "height", msg.Height)
 	m.ctx.TermWidth = msg.Width
 	m.ctx.TermHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height
