@@ -1,6 +1,8 @@
 package keys
 
 import (
+	"slices"
+
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
@@ -68,17 +70,14 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		additionalKeys = k.GlobalFullHelp()
 	}
 
-	allKeys := append(additionalKeys, k.GlobalKeys())
+	allKeys := slices.Concat(additionalKeys[:], k.GlobalKeys()[:])
 	return allKeys
 }
 
-func (k KeyMap) GlobalKeys() []key.Binding {
-	return []key.Binding{
-		k.Help,
-		k.Back,
-		k.Quit,
-		k.NxtTab,
-		k.PrevTab,
+func (k KeyMap) GlobalKeys() [][]key.Binding {
+	return [][]key.Binding{
+		{k.Help, k.Back, k.Quit},
+		{k.NxtTab, k.PrevTab},
 	}
 }
 
