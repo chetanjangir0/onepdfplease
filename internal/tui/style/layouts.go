@@ -6,12 +6,13 @@ import (
 
 func RenderTwoFullCols(termWidth, Height int, style lipgloss.Style, col1View, col2View string) string {
 	padding := 0
+	spacingRight := 2
 	height := SplitHeightByPercentage(Height, []float64{1}, padding, 2)
 	widths := SplitWidthByPercentage(termWidth, []float64{0.5, 0.5}, padding, 2)
 
 	// truncateView
-	col1View = TruncateView(col1View, widths[0])
-	col2View = TruncateView(col2View, widths[1])
+	col1View = TruncateView(col1View, widths[0]-spacingRight)
+	col2View = TruncateView(col2View, widths[1]-spacingRight)
 
 	// apply style
 	col1View = style.
@@ -34,12 +35,13 @@ func RenderTwoFullCols(termWidth, Height int, style lipgloss.Style, col1View, co
 
 func RenderTwoFullRows(termWidth, termHeight int, row1Style, row2Style lipgloss.Style, row1View, row2View string) string {
 	padding := 0
+	spacingRight := 2
 	heights := SplitHeightByPercentage(termHeight, []float64{0.6, 0.4}, padding, 2)
 	width := SplitWidthByPercentage(termWidth, []float64{1}, padding, 2)
 
 	// truncateView
-	row1View = TruncateView(row1View, width[0])
-	row2View = TruncateView(row2View, width[0])
+	row1View = TruncateView(row1View, width[0]-spacingRight)
+	row2View = TruncateView(row2View, width[0]-spacingRight)
 
 	// apply style
 	row1View = row1Style.
