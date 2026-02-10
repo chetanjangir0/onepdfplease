@@ -34,3 +34,10 @@ var FileListKeys = FileListKeymap{
 		key.WithHelp("esc", "Go Back"),
 	),
 }
+
+func FileListFullHelp() [][]key.Binding {
+	return [][]key.Binding{
+		{FileListKeys.Add, FileListKeys.Remove, FileListKeys.ShiftUp, FileListKeys.ShiftDown},
+	}
+
+}

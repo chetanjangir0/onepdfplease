@@ -15,8 +15,7 @@ type MenuKeyMap struct {
 
 func MenuFullHelp() [][]key.Binding {
 	return [][]key.Binding{
-		{MenuKeys.CursorDown, MenuKeys.CursorUp}, // first column
-		{MenuKeys.GoToStart, MenuKeys.GoToEnd},   // second column
+		{MenuKeys.CursorDown, MenuKeys.CursorUp, MenuKeys.GoToStart, MenuKeys.GoToEnd},
 	}
 }
 

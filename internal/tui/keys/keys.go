@@ -76,8 +76,8 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 
 func (k KeyMap) GlobalKeys() [][]key.Binding {
 	return [][]key.Binding{
-		{k.Help, k.Back, k.Quit},
-		{k.NxtTab, k.PrevTab},
+		{k.NxtTab, k.PrevTab, k.Help, k.Back},
+		{k.Quit},
 	}
 }
 
