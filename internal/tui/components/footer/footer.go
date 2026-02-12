@@ -69,7 +69,7 @@ func (m Model) View() string {
 	if m.ShowAll {
 		keyMap := keys.CreateKeyMapForPage(m.ctx.CurrentPage)
 		fullHelp := m.help.View(keyMap)
-		return lipgloss.JoinVertical(lipgloss.Top, footer, fullHelp)
+		footer = lipgloss.JoinVertical(lipgloss.Left, footer, fullHelp)
 	}
-	return footer
+	return lipgloss.NewStyle().MarginLeft(2).Render(footer)
 }
