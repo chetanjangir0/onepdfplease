@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -371,7 +373,7 @@ func getNextAvailablePath(basePath string) string {
 	for {
 		newPath := fmt.Sprintf("%s_%d%s", nameWithoutExt, counter, ext)
 
-		if _, err := os.Stat(newPath); os.IsNotExist(err) {
+		if _, err := os.Stat(newPath); errors.Is(err, fs.ErrNotExist) {
 			return newPath
 		}
 		counter++
