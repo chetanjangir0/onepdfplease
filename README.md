@@ -87,6 +87,11 @@ onepdfplease
 <!---->
 <!-- --- -->
 
+## Feedback
+
+If you try this, please open an issue or discussion.
+Even small UX feedback is welcome.
+
 ## License
 
 MIT
