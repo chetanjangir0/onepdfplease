@@ -66,6 +66,8 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 		additionalKeys = Img2pdfFullHelp()
 	case types.ExtractImgsPage:
 		additionalKeys = ExtractImgsFullHelp()
+	case types.Doc2PdfPage:
+		additionalKeys = Doc2PdfFullHelp()
 	default:
 		additionalKeys = k.GlobalFullHelp()
 	}
