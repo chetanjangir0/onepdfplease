@@ -9,6 +9,7 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/decrypt"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/doc2pdf"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/encrypt"
 	extractimgs "github.com/chetanjangir0/onepdfplease/internal/tui/pages/extractImgs"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/pages/img2pdf"
@@ -31,6 +32,7 @@ type model struct {
 	splitModel       split.Model
 	img2pdfModel     img2pdf.Model
 	extractImgsModel extractimgs.Model
+	doc2pdfModel     doc2pdf.Model
 	footer           footer.Model
 }
 
@@ -47,6 +49,7 @@ func InitialModel() model {
 	m.splitModel = split.NewModel(m.ctx)
 	m.img2pdfModel = img2pdf.NewModel(m.ctx)
 	m.extractImgsModel = extractimgs.NewModel(m.ctx)
+	m.doc2pdfModel = doc2pdf.NewModel(m.ctx)
 	m.footer = footer.NewModel(m.ctx)
 	return m
 }
@@ -113,6 +116,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.img2pdfModel, cmd = m.img2pdfModel.Update(msg)
 	case types.ExtractImgsPage:
 		m.extractImgsModel, cmd = m.extractImgsModel.Update(msg)
+	case types.Doc2PdfPage:
+		m.doc2pdfModel, cmd = m.doc2pdfModel.Update(msg)
 	}
 	cmds = append(cmds, cmd)
 
@@ -136,6 +141,8 @@ func (m model) View() string {
 		view = m.img2pdfModel.View()
 	case types.ExtractImgsPage:
 		view = m.extractImgsModel.View()
+	case types.Doc2PdfPage:
+		view = m.doc2pdfModel.View()
 	}
 	return lipgloss.JoinVertical(lipgloss.Left, view, m.footer.View())
 

@@ -1,4 +1,5 @@
 # OnePDFPlease - A TUI for working with PDFs
+
 ![merge](assets/merge.gif)
 
 A terminal-based PDF toolkit with vim keybindings providing a keyboard-driven
@@ -14,6 +15,7 @@ interface for various pdf releated tasks to ease the pain of working with pdfs
 - Decrypt Pdfs
 - Convert images to pdf
 - Extract embeded images from pdf
+- Convert DOC/DOCX to pdf (requires [LibreOffice](https://www.libreoffice.org/get-help/install-howto/))
 - Vim-style keybindings (`j`/`k` for navigation)
 - Minimal UI with clear feedback and status
 
