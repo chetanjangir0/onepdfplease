@@ -19,8 +19,6 @@ var (
 	itemStyle         = lipgloss.NewStyle().PaddingLeft(4)
 	selectedItemStyle = lipgloss.NewStyle().PaddingLeft(2).Foreground(lipgloss.Color("170"))
 	paginationStyle   = list.DefaultStyles().PaginationStyle.PaddingLeft(4)
-	helpStyle         = list.DefaultStyles().HelpStyle.PaddingLeft(4).PaddingBottom(1)
-	// quitTextStyle     = lipgloss.NewStyle().Margin(1, 0, 2, 4)
 )
 
 type item struct {
@@ -85,7 +83,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 	}
 
 	const defaultWidth = 20
-	const listHeight = 10
+	const listHeight = 11
 
 	l := list.New(items, itemDelegate{}, defaultWidth, listHeight)
 	l.Title = "What tool do you want to use?"
