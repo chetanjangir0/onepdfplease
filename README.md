@@ -1,6 +1,7 @@
 # OnePDFPlease - A TUI for working with PDFs
 
-![merge](assets/merge.mp4)
+<!-- ![merge](assets/merge.mp4) -->
+<video src="assets/demo.mp4" controls width="700"></video>
 
 A terminal-based PDF toolkit with vim keybindings providing a keyboard-driven
 interface for various pdf releated tasks to ease the pain of working with pdfs
