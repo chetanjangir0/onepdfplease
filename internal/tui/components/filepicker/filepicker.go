@@ -8,10 +8,14 @@ import (
 
 	"github.com/charmbracelet/bubbles/filepicker"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 )
+
+var browseViewHeader = "\n  Pick files:\n\n"
+var selectedViewHeader = "\n  Selected files:\n\n"
 
 type Model struct {
 	filepicker       filepicker.Model
@@ -39,8 +43,7 @@ func NewModel(ctx *context.ProgramContext) Model {
 }
 
 func (m *Model) onWindowSizeChanged() {
-	// TODO: Remove hardcoded value
-	headerHeight := 3
+	headerHeight := lipgloss.Height(browseViewHeader) 
 	borderHeight := 1
 	usedHeight := headerHeight + m.contentHeight + 2*borderHeight
 	if m.ctx.MainContentHeight < usedHeight {
@@ -108,7 +111,7 @@ func (m Model) View() string {
 
 func (m Model) browseView() string {
 	var view strings.Builder
-	view.WriteString("\n  Pick files:\n\n")
+	view.WriteString(browseViewHeader)
 	view.WriteString(m.filepicker.View())
 
 	return view.String()
@@ -116,7 +119,7 @@ func (m Model) browseView() string {
 
 func (m Model) selectedView() string {
 	var view strings.Builder
-	view.WriteString("\n  Selected files:\n\n")
+	view.WriteString(selectedViewHeader)
 	for i, f := range m.SelectedFiles {
 		// only show the last m.contentHeight files when files are too many
 		if m.contentHeight-1 <= len(m.SelectedFiles) && i < len(m.SelectedFiles)-(m.contentHeight - 1){
