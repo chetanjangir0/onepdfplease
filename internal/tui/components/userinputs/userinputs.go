@@ -5,9 +5,11 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/tui/keys"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 )
@@ -26,6 +28,7 @@ type Model struct {
 	ButtonText string
 	Disabled   map[int]bool
 	BoolInput  map[int]bool
+	keys       keys.UserInputKeymap
 }
 
 type Field struct {
@@ -66,6 +69,7 @@ func NewModel(fields []Field) Model {
 		ButtonText: "Submit",
 		Disabled:   make(map[int]bool),
 		BoolInput:  make(map[int]bool),
+		keys:       keys.UserInputKeys,
 	}
 
 	var t textinput.Model
@@ -101,12 +105,12 @@ func (m Model) Init() tea.Cmd {
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		switch msg.String() {
-		case "enter":
+		switch {
+		case key.Matches(msg, m.keys.BtnPress):
 			if m.FocusIndex == len(m.Inputs) {
 				return m, func() tea.Msg { return messages.OutputButtonClicked{} }
 			}
-		case "left", "right", "h", "l":
+		case key.Matches(msg, m.keys.ToggleField):
 			if m.BoolInput[m.FocusIndex] {
 				newValue := "no"
 				if m.Inputs[m.FocusIndex].Value() == "no" {
@@ -121,9 +125,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 					}
 				}
 			}
-		case "up", "ctrl+p":
+		case key.Matches(msg, m.keys.NxtField):
 			return m.moveFocus(-1)
-		case "down", "ctrl+n":
+		case key.Matches(msg, m.keys.PrevField):
 			return m.moveFocus(1)
 		}
 	}
