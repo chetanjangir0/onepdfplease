@@ -125,9 +125,9 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 					}
 				}
 			}
-		case key.Matches(msg, m.keys.NxtField):
-			return m.moveFocus(-1)
 		case key.Matches(msg, m.keys.PrevField):
+			return m.moveFocus(-1)
+		case key.Matches(msg, m.keys.NxtField):
 			return m.moveFocus(1)
 		}
 	}
