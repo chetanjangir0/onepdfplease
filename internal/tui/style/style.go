@@ -17,6 +17,12 @@ type Style struct {
 	MarginLeftStyle lipgloss.Style
 }
 
+var	logo = strings.Trim(`
+┏━┓┏┓╻┏━╸   ┏━┓╺┳┓┏━╸   ┏━┓╻  ┏━╸┏━┓┏━┓┏━╸
+┃ ┃┃┗┫┣╸    ┣━┛ ┃┃┣╸    ┣━┛┃  ┣╸ ┣━┫┗━┓┣╸ 
+┗━┛╹ ╹┗━╸   ╹  ╺┻┛╹     ╹  ┗━╸┗━╸╹ ╹┗━┛┗━╸
+`, "\n")
+
 var DefaultStyle = &Style{
 	FocusedBorder: lipgloss.NewStyle().
 		Border(lipgloss.RoundedBorder()).
@@ -34,7 +40,16 @@ var DefaultStyle = &Style{
 var (
 	FooterHeight       = 1
 	ExpandedHelpHeight = 5
+	LogoHeight = lipgloss.Height(logo)
 )
+
+func RenderLogo() string {
+	logoStyle := lipgloss.NewStyle().
+		Foreground(lipgloss.Color("105")).
+		Bold(true)
+
+	return logoStyle.Render(logo)
+}
 
 func SplitHeightByPercentage(height int, percentages []float64, padding, borderHeight int) []int {
 	numRows := len(percentages)

@@ -63,9 +63,10 @@ func (m *Model) onWindowSizeChanged() {
 
 	// make height more responsive
 	borderHeight := 1
-	contentHeight := m.listHeight + 2*borderHeight
+	logoHeight := style.LogoHeight 
+	contentHeight := m.listHeight + 2*borderHeight + logoHeight
 	if m.ctx.MainContentHeight < contentHeight {
-		m.tools.SetHeight(m.ctx.MainContentHeight - 2*borderHeight)
+		m.tools.SetHeight(m.ctx.MainContentHeight - 2*borderHeight-logoHeight)
 	} else {
 		m.tools.SetHeight(m.listHeight)
 	}
@@ -128,7 +129,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 }
 
 func (m Model) View() string {
-	toolsView := style.DefaultStyle.FocusedBorder.Render(m.tools.View())
+	toolsView :=lipgloss.JoinVertical(
+		lipgloss.Left,
+		style.RenderLogo(),
+		style.DefaultStyle.FocusedBorder.Render(m.tools.View()),
+	)
+
 	return lipgloss.Place(
 		m.ctx.TermWidth,
 		m.ctx.MainContentHeight,
