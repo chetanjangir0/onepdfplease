@@ -19,7 +19,7 @@ func TestUpdateFileExtension(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := updateFileExtension(tt.path, tt.newExt)
+			result := UpdateFileExtension(tt.path, tt.newExt)
 			if result != tt.expected {
 				t.Errorf("Got %s, want %s", result, tt.expected)
 			}
@@ -72,7 +72,7 @@ func TestGetNextAvailablePath(t *testing.T) {
 				}
 			}
 
-			result := getNextAvailablePath(tt.basePath)
+			result := GetNextAvailablePath(tt.basePath)
 			if result != tt.expected {
 				t.Errorf("got %s, want %s", result, tt.expected)
 			}

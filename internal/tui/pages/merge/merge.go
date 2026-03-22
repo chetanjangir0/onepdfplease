@@ -4,6 +4,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/pdf"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/userinputs"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
@@ -11,7 +12,6 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
-	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
 const (
@@ -91,7 +91,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > outputFileIdx && len(userValues[outputFileIdx]) != 0 {
 			outFile = userValues[outputFileIdx]
 		}
-		return m, utils.Merge(m.fileList.GetFilePaths(), outFile, m.ctx)
+		return m, pdf.Merge(m.fileList.GetFilePaths(), outFile, m.ctx)
 	}
 
 

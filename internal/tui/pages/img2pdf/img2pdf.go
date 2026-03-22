@@ -3,13 +3,13 @@ package img2pdf
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/pdf"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/userinputs"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
-	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
 const (
@@ -101,7 +101,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > mergeIntoOneIdx && userValues[mergeIntoOneIdx] == "yes" {
 			mergeIntoOne = true
 		}
-		return m, utils.Img2Pdf(m.fileList.GetFilePaths(), outFile, mergeIntoOne, m.ctx)
+		return m, pdf.Img2Pdf(m.fileList.GetFilePaths(), outFile, mergeIntoOne, m.ctx)
 	}
 
 	return m, cmd

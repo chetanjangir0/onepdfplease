@@ -4,6 +4,7 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/chetanjangir0/onepdfplease/internal/pdf"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/listfiles"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/components/userinputs"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/context"
@@ -11,7 +12,6 @@ import (
 	"github.com/chetanjangir0/onepdfplease/internal/tui/messages"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/style"
 	"github.com/chetanjangir0/onepdfplease/internal/tui/types"
-	"github.com/chetanjangir0/onepdfplease/internal/tui/utils"
 )
 
 const (
@@ -130,7 +130,7 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		if len(userValues) > prefixIdx && len(userValues[prefixIdx]) != 0 {
 			outPrefix = userValues[prefixIdx]
 		}
-		return m, utils.Encrypt(m.fileList.GetFilePaths(), password, outPath, outPrefix, inPlace, m.ctx)
+		return m, pdf.Encrypt(m.fileList.GetFilePaths(), password, outPath, outPrefix, inPlace, m.ctx)
 	}
 
 	return m, cmd
